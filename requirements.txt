@@ -6,4 +6,8 @@ packaging
 pandas
 pyyaml
 sympy
+pandas
+pyyaml
+sympy
+vtk
 yapf==0.31.0

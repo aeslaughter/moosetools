@@ -89,22 +89,12 @@ class ExodusSource(base.ChiggerSource):
         """
         return bindings
 
-    def __init__(self, *args, **kwargs):
-
-        viewport = None
-        reader = None
-        if len(args) == 1:
-            reader = args[0]
-        elif len(args) == 2:
-            viewport = args[0]
-            reader = args[1]
-        else:
-            raise TypeError("ExodusSource expects 1 or 2 input arguments, but {} provided.".format(len(args)))
+    def __init__(self, reader, **kwargs):
 
         self.__reader = reader
         self.__current_variable = None
 
-        base.ChiggerSource.__init__(self, viewport,
+        base.ChiggerSource.__init__(self,
                                     nInputPorts=1, inputType='vtkMultiBlockDataSet',
                                     nOutputPorts=1, outputType='vtkMultiBlockDataSet',
                                     **kwargs)

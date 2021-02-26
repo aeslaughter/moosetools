@@ -4,12 +4,9 @@
 import vtk
 
 # Input file and variable
-#filename = '../tests/input/mug_blocks_out.e'
-#nodal_var = 'convected'
-filename = '../tests/input/input_out.e'
-nodal_var = 'u'
+filename = '../input/mug_blocks_out.e'
+nodal_var = 'convected'
 
-"""
 # Read Exodus Data
 reader = vtk.vtkExodusIIReader()
 reader.SetFileName(filename)
@@ -17,11 +14,6 @@ reader.UpdateInformation()
 reader.SetTimeStep(1)
 reader.SetAllArrayStatus(vtk.vtkExodusIIReader.NODAL, 1)  # enables all NODAL variables
 reader.Update()
-# print reader # uncomment this to show the file information
-"""
-
-import chigger
-reader = chigger.exodus.ExodusReader(filename)
 
 # Create Geometry
 geometry = vtk.vtkCompositeDataGeometryFilter()
@@ -32,7 +24,6 @@ geometry.Update()
 mapper = vtk.vtkPolyDataMapper()
 mapper.SetInputConnection(geometry.GetOutputPort())
 mapper.SelectColorArray(nodal_var)
-mapper.SetScalarRange(1, 3)
 mapper.SetScalarModeToUsePointFieldData()
 mapper.InterpolateScalarsBeforeMappingOn()
 

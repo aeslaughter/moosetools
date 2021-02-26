@@ -152,7 +152,7 @@ class Viewport(utils.KeyBindingMixin, base.ChiggerAlgorithm):
 
         # Add/Remove highlight
         if self.getOption('highlight') and (self.__outline is None):
-            self.__outline = geometric.Outline2D(self, bounds=(0,1,0,1), pickable=False)
+            self.__outline = geometric.Outline2D(viewport=self, pickable=False)
         elif (not self.getOption('highlight')) and (self.__outline is not None):
             self.__outline.remove()
             del self.__outline
@@ -197,8 +197,11 @@ class Viewport(utils.KeyBindingMixin, base.ChiggerAlgorithm):
         self._setViewport(2, -0.05)
 
     def _setViewport(self, index, increment):
-        x_min, y_min, x_max, y_max = self.getOption('viewport')
-        c = list(self.getOption('viewport'))
+        x_min = self.getOption('xmin')
+        x_max = self.getOption('xmax')
+        y_min = self.getOption('ymin')
+        y_max = self.getOption('ymax')
+        c = [x_min, y_min, x_max, y_max]
         c[index] += increment
 
         xmin = round(c[0], 3) if (c[0] >= 0 and c[0] < c[2]) else xmin
