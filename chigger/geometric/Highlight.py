@@ -10,6 +10,8 @@ class HighlightBase(object):
         opt.add('color', vtype=utils.AutoColor, doc="The color of the outline")
         opt.add("offset", 0, vtype=(int, float),
                 doc="Offset percentage applied to the 3D bounding box")
+        opt.add('linewidth', 1, vtype=int,
+                doc="The highlight line width (in pixels)")
         opt.add('source', required=True,
                 doc='The chigger.base.ChiggerSourceBase object that shall be highlighted')
         return opt
@@ -17,6 +19,9 @@ class HighlightBase(object):
     def _onRequestInformation(self, *args):
         if self.isOptionValid('color'):
             self._vtkactor.GetProperty().SetColor(self.getOption('color').rgb())
+        if self.isOptionValid('linewidth'):
+            self._vtkactor.GetProperty().SetLineWidth(self.getOption('linewidth'))
+
 
 class Highlight(GeometricSource, HighlightBase):
     VTKSOURCETYPE = vtk.vtkOutlineCornerSource

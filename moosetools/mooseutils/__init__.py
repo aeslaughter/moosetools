@@ -6,7 +6,7 @@
 #*
 #* Licensed under LGPL 2.1, please see LICENSE for details
 #* https://www.gnu.org/licenses/lgpl-2.1.html
-
+from .color_text import color_text
 from .mooseutils import colorText, str2bool, find_moose_executable, runExe, check_configuration
 from .mooseutils import find_moose_executable_recursive, run_executable
 from .mooseutils import touch, unique_list, gold, make_chunks, camel_to_space

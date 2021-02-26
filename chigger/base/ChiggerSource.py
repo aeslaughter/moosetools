@@ -201,7 +201,8 @@ class ChiggerSourceBase(utils.KeyBindingMixin, ChiggerAlgorithm):
             is_3D = isinstance(self.getVTKActor(), vtk.vtkActor)
             obj_type = geometric.Highlight if is_3D else geometric.Highlight2D
             offset = 0.05 if is_3D else 0.02
-            self._outline = obj_type(self._viewport, self, pickable=False, offset=offset, linewidth=1, color=(1,1,0))
+            self._outline = obj_type(viewport=self._viewport, source=self, pickable=False,
+                                     offset=offset, linewidth=3, color=(1,1,0))
         elif (not self.getOption('highlight')) and (self._outline is not None):
             self._outline.remove()
             del self._outline

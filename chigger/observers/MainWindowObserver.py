@@ -31,8 +31,8 @@ class MainWindowObserver(ChiggerObserver, utils.KeyBindingMixin):
     def validKeyBindings():
         bindings = utils.KeyBindingMixin.validKeyBindings()
 
-        bindings.add('v', MainWindowObserver.nextViewport, desc="Select the next viewport.")
-        bindings.add('v', MainWindowObserver.nextViewport, shift=True, args=(True,),
+        bindings.add('v', MainWindowObserver.nextViewport, args=(1,), desc="Select the next viewport.")
+        bindings.add('v', MainWindowObserver.nextViewport, shift=True, args=(-1,),
                      desc="Select the previous viewport.")
 
         bindings.add('s', MainWindowObserver.nextSource,
@@ -97,25 +97,23 @@ class MainWindowObserver(ChiggerObserver, utils.KeyBindingMixin):
             vp.setOptions(interactive=active, highlight=active)
             vp.updateInformation()
 
-    def nextViewport(self, decrease=False):
+    def nextViewport(self, increment):
         """Activate the "next" viewport object."""
         self.debug('Select Next Viewport')
 
         # Remove highlighting from the active source.
         self.setActiveSource(None)
-
-        # Determine the index of the Viewport to be set to active
-        index = 0
         viewports = self.getViewports()
         current = self.getActiveViewport()
-        if current is not None:
-            index = viewports.index(current)
-            index = index - 1 if decrease else index + 1
 
-        current = viewports[index] if index < len(viewports) else None
+        index = viewports.index(current) if (current is not None) else -1
+        index += increment
+
+        current = viewports[index] if (index < len(viewports)) else None
+
         self.setActiveViewport(current)
-
         self._window.render()
+
 
     def getSources(self):
         """Complete list of available ChiggerSourceBase objects"""

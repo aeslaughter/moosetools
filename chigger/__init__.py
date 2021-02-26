@@ -8,6 +8,7 @@
 #* Licensed under LGPL 2.1, please see LICENSE for details
 #* https://www.gnu.org/licenses/lgpl-2.1.html
 import os
+import traceback
 import logging
 import mooseutils
 
@@ -22,22 +23,24 @@ class ChiggerFormatter(logging.Formatter):
           Perhaps a "mixins" package: 'moosetools.mixins.MooseLoggerMixin' would add the log methods,
           other objects such at the AutoProperty would also go within that module
     """
-    COLOR = dict(DEBUG='CYAN',
-                 INFO='RESET',
-                 WARNING='LIGHT_YELLOW',
-                 ERROR='LIGHT_RED',
-                 CRITICAL='LIGHT_MAGENTA')
+    COLOR = dict(DEBUG='cyan_1',
+                 INFO='default',
+                 WARNING='yellow_1',
+                 ERROR='red_1',
+                 CRITICAL='magenta_1')
 
     COUNTS = dict(CRITICAL=0, ERROR=0, WARNING=0, INFO=0, DEBUG=0)
 
     def format(self, record):
         """Format the supplied logging record and count the occurrences."""
         self.COUNTS[record.levelname] += 1
-
-        msg = '{} {}:{} {}\n'.format(mooseutils.colorText(record.levelname, self.COLOR[record.levelname]),
-                                     mooseutils.colorText(record.name, 'LIGHT_GREY') ,
-                                     mooseutils.colorText(str(record.lineno), 'LIGHT_GREY'),
-                                     logging.Formatter.format(self, record))
+        stack = traceback.extract_stack()
+        msg = '{}: {}\n{}:{}\n'.format(mooseutils.color_text(record.levelname, self.COLOR[record.levelname]),
+                                      logging.Formatter.format(self, record),
+                                      mooseutils.color_text(stack[0].filename, 'dodger_blue_1'),
+                                      mooseutils.color_text(str(stack[0].lineno), 'grey_70'))
+        msg += '{0}\n{1}\n{0}\n'.format('━' * len(stack[0].line), stack[0].line)
+        msg += '\n{}\n'.format(mooseutils.color_text(''.join(stack.format()), 'grey_30'))
         return msg
 
 # Setup the logging
