@@ -62,8 +62,8 @@ class MainWindowObserver(ChiggerObserver, utils.KeyBindingMixin):
 
         return bindings
 
-    def __init__(self, *args, **kwargs):
-        ChiggerObserver.__init__(self, *args, **kwargs)
+    def __init__(self, **kwargs):
+        ChiggerObserver.__init__(self, **kwargs)
         utils.KeyBindingMixin.__init__(self)
 
         self.addObserver(vtk.vtkCommand.KeyPressEvent, self._onKeyPressEvent)

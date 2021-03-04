@@ -215,7 +215,7 @@ class Window(base.ChiggerAlgorithm):
 
             # Add/remove the default MainWindowObserver
             if self.getOption('observer') and (self.__observer is None):
-                self.__observer = observers.MainWindowObserver(self)
+                self.__observer = observers.MainWindowObserver(window=self)
             elif (not self.getOption('observer')) and (self.__observer is not None):
                 del self.__observer
                 self.__observer = None

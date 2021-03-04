@@ -185,6 +185,7 @@ class ChiggerObjectBase(object):
         if name:
             self.__logger.log(lvl, '({}): {}'.format(self.getOption('name'), msg), **kwargs)
         else:
+            print(**kwargs)
             self.__logger.log(lvl, ' {}'.format(msg), **kwargs)
 
     def __setOptionsFromCommandLine(self, argv):
