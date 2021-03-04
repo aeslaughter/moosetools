@@ -9,7 +9,7 @@ class HighlightBase(object):
         opt = utils.Options()
         opt.add('color', vtype=utils.AutoColor, doc="The color of the outline")
         opt.add("offset", 0, vtype=(int, float),
-                doc="Offset percentage applied to the 3D bounding box")
+                doc="Offset percentage applied to the bounding box")
         opt.add('linewidth', 1, vtype=int,
                 doc="The highlight line width (in pixels)")
         opt.add('source', required=True,

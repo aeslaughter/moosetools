@@ -86,7 +86,7 @@ class MainWindowObserver(ChiggerObserver, utils.KeyBindingMixin):
     def getActiveViewport(self):
         """Current active (highlighted) Viewport object"""
         for viewport in self.getViewports():
-            if viewport.getOption('interactive'):
+            if viewport.getOption('highlight'):
                 return viewport
         return None
 
@@ -94,7 +94,7 @@ class MainWindowObserver(ChiggerObserver, utils.KeyBindingMixin):
         """Activate the supplied viewport and disable all others"""
         for vp in self.getViewports():
             active = viewport is vp
-            vp.setOptions(interactive=active, highlight=active)
+            vp.setOptions(interactive=False, highlight=active)
             vp.updateInformation()
 
     def nextViewport(self, increment):
@@ -132,6 +132,11 @@ class MainWindowObserver(ChiggerObserver, utils.KeyBindingMixin):
             s.setOptions(highlight=active, interactive=active)
             s._viewport.updateInformation()
             s.updateInformation()
+
+        src = self.getActiveSource()
+        if src is not None:
+            src._viewport.setOptions(interactive=True)
+            src._viewport.updateInformation()
 
     def nextSource(self, decrease=False):
         """
