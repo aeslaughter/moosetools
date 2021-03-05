@@ -8,6 +8,7 @@
 #* Licensed under LGPL 2.1, please see LICENSE for details
 #* https://www.gnu.org/licenses/lgpl-2.1.html
 import vtk
+import traceback
 from .ChiggerObserver import ChiggerObserver
 class TestObserver(ChiggerObserver):
     """
@@ -27,6 +28,43 @@ class TestObserver(ChiggerObserver):
         self._window.getVTKInteractor().CreateOneShotTimer(int(self.getOption('duration'))*1000)
         self.addObserver(vtk.vtkCommand.TimerEvent, self._onEvent)
         self._actions = list()
+        self._retcode = 0
+
+    def append(self, func):
+        self._actions.append(func)
+
+    def assertImage(self, *args, **kwargs):
+        self.append(lambda: self._assertImage(*args, **kwargs))
+
+
+
+
+    def _assertImage(self, filename):
+        gold = vtk.vtkPNGReader()
+        gold.SetFileName(filename)
+
+        current = vtk.vtkWindowToImageFilter()
+        current.SetInput(self._window.getVTKWindow())
+
+        diff = vtk.vtkImageDifference()
+        diff.SetInputConnection(current.GetOutputPort())
+        diff.SetImageConnection(gold.GetOutputPort())
+        diff.Update()
+
+        if diff.GetThresholdedError():
+            self._window.write(filename=filename)
+
+            writer = vtk.vtkPNGWriter()
+            writer.SetInputConnection(diff.GetOutputPort())
+            writer.SetFileName("diff.png")
+            writer.Write()
+
+
+        return diff.GetThresholdedError(), str(diff)
+
+
+
+
 
     def pressKey(self, key, shift=False):
         """
@@ -77,9 +115,20 @@ class TestObserver(ChiggerObserver):
         vtkinteractor.SetKeySym(None)
         vtkinteractor.SetShiftKey(False)
 
+    def status(self):
+        return self._retcode
+
     def _onEvent(self, *args, **kwargs):
         self.debug("Execute event")
+
         for action in self._actions:
-            action()
-        #if self.getOption('terminate'):
-        #    self.terminate()
+            out = action()
+            if out is not None:
+                self._retcode += out[0]
+                if out[0]:
+                    print(traceback.extract_stack())
+                    print(out[1])
+                    break
+
+        if self.getOption('terminate'):
+            self.terminate()

@@ -133,7 +133,7 @@ class ChiggerObjectBase(object):
             setOption('date', 'year', 1980) # 'date' is an InputParameters object
             setOption('date_year', 1980)    # 'date' is an InputParameters object
         """
-        self.debug('setOption')
+        #self.debug('setOption')
         self._options.set(*args)
 
     def setOptions(self, *args, **kwargs):
@@ -185,7 +185,6 @@ class ChiggerObjectBase(object):
         if name:
             self.__logger.log(lvl, '({}): {}'.format(self.getOption('name'), msg), **kwargs)
         else:
-            print(**kwargs)
             self.__logger.log(lvl, ' {}'.format(msg), **kwargs)
 
     def __setOptionsFromCommandLine(self, argv):

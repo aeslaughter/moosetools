@@ -188,8 +188,8 @@ class Window(base.ChiggerAlgorithm):
         # Interactive/Observer settings
         if self.getOption('offscreen'):
             self.__vtkwindow.OffScreenRenderingOn()
-        elif not self.getOption('interactive'):
-            self.__vtkinteractorstyle = vtk.vtkInteractorStyleUser()
+        #elif not self.getOption('interactive'):
+        #    self.__vtkinteractorstyle = vtk.vtkInteractorStyleUser()
         else:
             # TODO: Restore 2D option for 3D objects in plane
             self.__vtkinteractorstyle = vtk.vtkInteractorStyleJoystickCamera()
