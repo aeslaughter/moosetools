@@ -26,3 +26,7 @@ contrib/**/*.so.*
 **/*.*.~*~
 \#*.*#
 .#*
+
+# CHIGGER
+*.png
+!**/gold/*.png

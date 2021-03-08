@@ -31,34 +31,25 @@ class MainWindowObserver(ChiggerObserver, utils.KeyBindingMixin):
     def validKeyBindings():
         bindings = utils.KeyBindingMixin.validKeyBindings()
 
-        bindings.add('v', MainWindowObserver.nextViewport, args=(1,), desc="Select the next viewport.")
-        bindings.add('v', MainWindowObserver.nextViewport, shift=True, args=(-1,),
+        bindings.add('v', MainWindowObserver.onNextViewport, args=(1,), desc="Select the next viewport.")
+        bindings.add('v', MainWindowObserver.onNextViewport, shift=True, args=(-1,),
                      desc="Select the previous viewport.")
 
-        bindings.add('s', MainWindowObserver.nextSource,
+        bindings.add('s', MainWindowObserver.onNextSource, args=(1,),
                      desc="Select the next source in the current viewport.")
-        bindings.add('s', MainWindowObserver.nextSource, shift=True, args=(True,),
+        bindings.add('s', MainWindowObserver.onNextSource, shift=True, args=(-1,),
                      desc="Select the previous source in the current viewport.")
 
-        bindings.add('p', MainWindowObserver._onPrintOptions,
+        bindings.add('p', MainWindowObserver.onPrintOptions,
                      desc="Display the available key, value options for the active source or viewport.")
-        bindings.add('p', MainWindowObserver._onPrintSetOptions, shift=True,
-                     desc="Display the available key, value options as a 'setOptions' method call for the active source of viewport.")
+        bindings.add('p', MainWindowObserver.onPrintSetOptions, shift=True,
+                     desc="Display the non-default key, value options as a 'setOptions' method call for the active source of viewport.")
 
-        bindings.add('t', MainWindowObserver.deactivate, desc="Clear selection(s).")
+        bindings.add('c', MainWindowObserver.onPrintCamera,
+                     desc="Display the camera settings for the current viewport/object.")
+        bindings.add('t', MainWindowObserver.onDeactivate, desc="Clear selection(s).")
 
-        # TODO:
-        # bindinds.add('q',...)
-
-
-        # TODO: This still needs some work, hitting enter doesn't seem to exit correctly
-        #bindings.add('o', MainWindowObserver._onChangeOption,
-        #             desc="Prompt the user to change an option via the command-line.")
-
-        # TODO: This needs some work also, it can mess up spacing and and the 'opacity' from the
-        #       Text annotation does not show up
-        #bindings.add('w', MainWindowObserver._onWriteChanges,
-        #             desc="Write the changed settings for an active object to the script file.")
+        bindings.add('q', MainWindowObserver.onQuit, desc="Close the window.")
 
         return bindings
 
@@ -97,7 +88,7 @@ class MainWindowObserver(ChiggerObserver, utils.KeyBindingMixin):
             vp.setOptions(interactive=False, highlight=active)
             vp.updateInformation()
 
-    def nextViewport(self, increment):
+    def onNextViewport(self, increment):
         """Activate the "next" viewport object."""
         self.debug('Select Next Viewport')
 
@@ -106,10 +97,11 @@ class MainWindowObserver(ChiggerObserver, utils.KeyBindingMixin):
         viewports = self.getViewports()
         current = self.getActiveViewport()
 
-        index = viewports.index(current) if (current is not None) else -1
+        index0 = -1 if (increment > 0) else len(viewports)
+        index = viewports.index(current) if (current is not None) else index0
         index += increment
 
-        current = viewports[index] if (index < len(viewports)) else None
+        current = viewports[index] if ((index < len(viewports)) and (index >= 0)) else None
 
         self.setActiveViewport(current)
         self._window.render()
@@ -138,7 +130,7 @@ class MainWindowObserver(ChiggerObserver, utils.KeyBindingMixin):
             src._viewport.setOptions(interactive=True)
             src._viewport.updateInformation()
 
-    def nextSource(self, decrease=False):
+    def onNextSource(self, increment):
         """
         Activate the "next" source object
         """
@@ -150,75 +142,72 @@ class MainWindowObserver(ChiggerObserver, utils.KeyBindingMixin):
         # Determine the index of the ChiggerSourceBase to be set to active
         sources = self.getSources()
         current = self.getActiveSource()
-        index = 0
-        if current is not None:
-            index = sources.index(current)
-            index = index - 1 if decrease else index + 1
 
-        current = sources[index] if index < len(sources) else None
+        index0 = -1 if (increment > 0) else len(sources)
+        index = sources.index(current) if (current is not None) else index0
+        index += increment
+
+        current = sources[index] if ((index < len(sources)) and (index >= 0)) else None
         self.setActiveSource(current)
 
         self._window.render()
 
-    def deactivate(self):
+    def onDeactivate(self):
         """Remove all interaction seclections"""
         self.setActiveViewport(None)
         self.setActiveSource(None)
 
-    def writeChanges(self, obj):
+    def onPrintOptions(self):
+        """Print a list of all available options for active objects."""
+        def printHelper(obj):
+            if obj is not None:
+                print(mooseutils.colorText('\n{} Available Options:'.format(obj.name()), 'LIGHT_CYAN'))
+                print(obj._options)
+
+        obj = self.getActiveSource() or self.getActiveViewport()
+        if obj is not None:
+            printHelper(obj)
+        else:
+            self.warning("No active viewport or source, so there is nothing to print (press 'h' for help).")
+
+    def onPrintSetOptions(self, *args):
+        """Print python code for the 'setOptions' method for active objects"""
+        def printHelper(obj):
+            if obj is not None:
+                output, sub_output = obj._options.toScript()
+                print('\n{} -> setOptions({})'.format(obj.name(), ', '.join(output)))
+                for key, value in sub_output.items():
+                    print('{} -> setOptions({}, {})'.format(obj.name(), key, ', '.join(repr(value))))
+
+        obj = self.getActiveSource() or self.getActiveViewport()
+        if obj is not None:
+            printHelper(obj)
+        else:
+            self.warning("No active viewport or source, so there is nothing to print (press 'h' for help).")
+
+    def onWriteChanges(self):
         """Write changes from the supplied object directly to the script, if desired"""
 
-        # Extract the option information
-        trace = obj._init_traceback[0]
-        filename = trace[0]
-        line = trace[1]
+        # Determine the object to glean options from and error if two things are active
+        obj = self.getActiveSource() or self.getActiveViewport()
+        if obj is not None:
+            self._onWriteChanges(obj)
+        else:
+            self.warning("No active source or viewport to inspect for option changes, so there is nothing to write (press 'h' for help).")
 
-        # Inline function for swapping options
-        output, sub_output = obj._options.getNonDefaultOptions()
-        def sub_func(match):
-            key = match.group('key')
-            value = match.group('value')
-            if key in output:
-                return '{}={}'.format(key, repr(obj.getOption(key)))
-            return match.group(0)
+    def onPrintCamera(self):
+        viewport = self.getActiveViewport()
+        if viewport is None:
+            source = self.getActiveSource()
+            viewport = source._viewport if source is not None else None
 
-        # Read the original file
-        with open(filename, 'r') as fid:
-            lines = fid.readlines()
+        if viewport is not None:
+            print('\n'.join(utils.print_camera(viewport.getVTKRenderer().GetActiveCamera())))
+        else:
+            self.warning("No active source or viewport, so the desired camera is unknown (press 'h' for help).")
 
-        # Swap line with new option(s)
-        content = self.RE.sub(sub_func, trace[3])
-        new_lines = copy.copy(lines)
-        new_lines[line-1] = '{}\n'.format(content)
-
-        # Create and show the diff, if it exists
-        diff = mooseutils.text_unidiff('\n'.join(new_lines), '\n'.join(lines), out_fname=filename, gold_fname=filename, num_lines=1)
-        if not diff:
-            self.info("No changes to the filename {} to write.", filename)
-            return
-
-        # Show the proposed changes
-        n = max(max([len(l) for l in lines]), max([len(l) for l in new_lines]))
-        print('='*n)
-        print('{} PROPOSED CHANGES'.format(filename))
-        print('='*n)
-        print(diff.strip('\n'))
-
-        # Prompt the user for an action
-        choice = self._prompt("Would you like to overwrite[w], create a diff[d], or quit[q]? ")
-
-        if choice == 'd':
-            with open(filename + '.diff', 'w') as fid:
-                fid.write(diff)
-        elif choice == 'w':
-            with open(filename, 'w') as fid:
-                fid.write(''.join(new_lines))
-
-    def _prompt(self, msg):
-        self._window.getVTKInteractor().Disable()
-        choice = input(msg)
-        self._window.getVTKInteractor().Enable()
-        return choice
+    def onQuit(self):
+        self._window.terminate()
 
     def _onKeyPressEvent(self, obj, event):
         """
@@ -248,73 +237,3 @@ class MainWindowObserver(ChiggerObserver, utils.KeyBindingMixin):
                 binding.function(source, *binding.args)
 
         self._window.render()
-
-    def _onWriteChanges(self):
-
-
-        # Determine the object to glean options from and error if two things are active
-        source = self.getActiveSource()
-        viewport = self.getActiveViewport()
-        if (source is not None) and (viewport is not None):
-            self.error("Both a source and viewport are active which is not supported for writing, because of potential output conflicts.")
-            return
-        elif (source is None) and (viewport is None):
-            self.warning("No active source of viewport to inspect for option changes, so there is nothing to write.")
-            return
-
-        obj = source or viewport
-        self.writeChanges(obj)
-
-    def _onPrintOptions(self):
-        """Print a list of all available options for active objects."""
-        def printHelper(obj):
-            if obj is not None:
-                print(mooseutils.colorText('\n{} Available Options:'.format(obj.name()), 'LIGHT_CYAN'))
-                print(obj._options)
-
-        printHelper(self.getActiveViewport())
-        printHelper(self.getActiveSource())
-
-    def _onPrintSetOptions(self, *args):
-        """Print python code for the 'setOptions' method for active objects"""
-        def printHelper(obj):
-            if obj is not None:
-                output, sub_output = obj._options.toScript()
-                print('\n{} -> setOptions({})'.format(obj.name(), ', '.join(output)))
-                for key, value in sub_output.items():
-                    print('{} -> setOptions({}, {})'.format(obj.name(), key, ', '.join(repr(value))))
-
-        printHelper(self.getActiveViewport())
-        printHelper(self.getActiveSource())
-
-
-    def _onChangeOption(self):
-        """Prompt user on command line to change a parameter by name"""
-
-        # Determine the object to glean options from and error if two things are active
-        source = self.getActiveSource()
-        viewport = self.getActiveViewport()
-        if (source is not None) and (viewport is not None):
-            self.error("Both a source and viewport are active which is not supported for writing, because of potential output conflicts.")
-            return
-        elif (source is None) and (viewport is None):
-            self.warning("No active source of viewport to inspect for option changes, so there is nothing to write.")
-            return
-
-        obj = source or viewport
-
-        # Get the name of the parameter to change
-        while True:
-            param = self._prompt('Enter the option to change (press enter to abort): ')
-            if len(param) > 0 and (param not in obj._options):
-                msg ="'{}' is not an option in {} object, available options include:\n  ".format(param, obj.name())
-                msg += '\n  '.join(obj._options.keys())
-                print(msg)
-                continue
-            break
-
-        # Get the value of the parameter
-        if len(param) > 0:
-            print(obj._options.toString(param))
-            value = self._prompt('Enter the value of the option to change: ')
-            obj.setOption(param, eval(value))

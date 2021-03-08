@@ -160,6 +160,7 @@ class Window(base.ChiggerAlgorithm):
         if self.__vtkinteractor is not None:
             self.__vtkinteractor.TerminateApp()
         del self.__vtkwindow, self.__vtkinteractor
+        self.__vtkwindow = None
 
 
 
@@ -233,9 +234,10 @@ class Window(base.ChiggerAlgorithm):
         self.__vtkwindow.Render()
 
     def render(self):
-        self.updateInformation()
-        self.updateData()
-        self.__vtkwindow.Render()
+        if self.__vtkwindow is not None:
+            self.updateInformation()
+            self.updateData()
+            self.__vtkwindow.Render()
 
     def resetCamera(self):
         """

@@ -17,13 +17,12 @@ from . import geometric
 
 class Viewport(utils.KeyBindingMixin, base.ChiggerAlgorithm):
     """
-    The ChiggerResult is the base class for creating renderered objects. This class
-    contains a single vtkRenderer to which many actors can be added.
+    Viewport object define a region within the window for displaying source objects, it
+    is a wrapper around the VTK vtkRenderer object.
     """
 
-    # The type of input (as a string), see VTKPythonAlgoritimBase
-    VTKINPUTTYPE = None
-
+    # Used by utils.get_current_viewport for automatically adding source objects to the current
+    # Viewport, in similar fashion that matplotlib operates.
     __CHIGGER_CURRENT__ = None
 
     @classmethod
@@ -33,9 +32,9 @@ class Viewport(utils.KeyBindingMixin, base.ChiggerAlgorithm):
         opt += utils.BackgroundOptions.validOptions()
 
         opt.add('light', vtype=(int, float),
-               doc="Add a headlight with the given intensity to the renderer.")
+               doc="Add a headlight with the given intensity to the viewport.")
         opt.add('layer', default=1, vtype=int,
-                doc="The VTK layer within the render window.")
+                doc="The layer within the render window.")
 
         opt.add('xmin', default=0, vtype=(int, float),
                 verify=(lambda v: v>=0 and v<=1, "Value must be in range [0,1]"))
@@ -62,8 +61,6 @@ class Viewport(utils.KeyBindingMixin, base.ChiggerAlgorithm):
     def validKeyBindings():
 
         bindings = utils.KeyBindingMixin.validKeyBindings()
-        bindings.add('c', Viewport.printCamera,
-                     desc="Display the camera settings for this object.")
 
         bindings.add('right', Viewport._setViewport, args=(0, 0.025),
                      desc="Increase the viewport x-min value.")
@@ -171,19 +168,12 @@ class Viewport(utils.KeyBindingMixin, base.ChiggerAlgorithm):
         # Auto adjust background color
         utils.auto_adjust_color(self, self.__sources)
 
-        self._vtkrenderer.ResetCameraClippingRange()
-        self._vtkrenderer.ResetCamera()
-
     def getVTKRenderer(self):
         """Return the vtk.vtkRenderer object."""
         return self._vtkrenderer
 
     def sources(self):
         return self.__sources
-
-    def printCamera(self, *args): #pylint: disable=unused-argument
-        """Keybinding callback."""
-        print('\n'.join(utils.print_camera(self._vtkrenderer.GetActiveCamera())))
 
     def increaseXmin(self, *args):
         self._setViewport(0, 0.05)

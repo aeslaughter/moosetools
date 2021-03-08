@@ -1,8 +1,0 @@
-[Tests]
-  [viewport]
-    type = ChiggerImageDiff
-    chigger_test = False # testing main observer
-    command = viewport.py
-    imagediff = 'viewport_none.png viewport_left.png viewport_right.png'
-  []
-[]

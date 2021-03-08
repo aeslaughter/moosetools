@@ -35,15 +35,15 @@ class ChiggerFormatter(logging.Formatter):
         """Format the supplied logging record and count the occurrences."""
         self.COUNTS[record.levelname] += 1
         msg = '{}: {}'.format(mooseutils.color_text(record.levelname, self.COLOR[record.levelname]),
-                                      logging.Formatter.format(self, record))
+                              logging.Formatter.format(self, record))
 
 
-        if record.levelno > logging.INFO:
-            stack = traceback.extract_stack()
-            msg += '\n{}:{}\n'.format(mooseutils.color_text(stack[0].filename, 'dodger_blue_1'),
-                                      mooseutils.color_text(str(stack[0].lineno), 'grey_70'))
-            msg += '{0}\n{1}\n{0}\n'.format('━' * len(stack[0].line), stack[0].line)
-            msg += '\n{}\n'.format(mooseutils.color_text(''.join(stack.format()), 'grey_30'))
+        #if record.levelno > logging.INFO:
+        #    stack = traceback.extract_stack()
+        #    msg += '\n{}:{}\n'.format(mooseutils.color_text(stack[0].filename, 'dodger_blue_1'),
+        #                              mooseutils.color_text(str(stack[0].lineno), 'grey_70'))
+        #    msg += '{0}\n{1}\n{0}\n'.format('━' * len(stack[0].line), stack[0].line)
+        #    msg += '\n{}\n'.format(mooseutils.color_text(''.join(stack.format()), 'grey_30'))
         return msg
 
 # Setup the logging

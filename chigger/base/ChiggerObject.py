@@ -176,7 +176,7 @@ class ChiggerObjectBase(object):
         """
         print('{}={}'.format(key, repr(self.getOption(key))))
 
-    def _log(self, lvl, msg, *args, **kwargs):
+    def _log(self, lvl, msg, *args, traceback=True, stack=None, **kwargs):
         """
         Helper for using logging package with class name prefix
         """
