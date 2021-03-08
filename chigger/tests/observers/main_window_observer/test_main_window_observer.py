@@ -22,7 +22,7 @@ def main():
     rect1 = chigger.geometric.Rectangle(xmin=0.25, xmax=0.5, ymin=0.25, ymax=0.75, color=(0.2, 0.1, 0.5))
     cube1 = chigger.geometric.Cube(xmin=0.5, xmax=0.8, ymin=0, ymax=0.5, zmin=0.8, zmax=1, color=(0.8, 0.2, 0.1))
 
-    test = chigger.observers.TestObserver()
+    test = chigger.observers.TestObserver(terminate=False)
     test.assertImage('initial.png')
 
     # General keybindings

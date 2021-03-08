@@ -28,6 +28,7 @@ from . import BackgroundOptions
 
 from .utils import get_current_window
 from .utils import get_current_viewport
+from .utils import get_current_exodus_reader
 
 # TODO: Move these to utils.py
 

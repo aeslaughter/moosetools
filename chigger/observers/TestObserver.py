@@ -26,7 +26,7 @@ class TestObserver(ChiggerObserver):
     @staticmethod
     def validOptions():
         opt = ChiggerObserver.validOptions()
-        opt.add('terminate', vtype=bool, default=False, doc="Exit after rendering.")
+        opt.add('terminate', vtype=bool, default=True, doc="Exit after rendering.")
         opt.add('duration', vtype=(int, float), default=0.5, doc="Duration to wait in seconds for event trigger.")
         return opt
 

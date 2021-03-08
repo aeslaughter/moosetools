@@ -105,6 +105,10 @@ class ExodusReader(base.ChiggerAlgorithm, VTKPythonAlgorithmBase):
     VARIABLE_TYPES = [ELEMENTAL, NODAL, GLOBAL]
     VARIABLE_TYPES_NAMES = {ELEMENTAL:'ELEMENTAL', NODAL:'NODAL', GLOBAL:'GLOBAL'}
 
+    # Used by utils.get_current_exodus_reader for automatically adding reader objects to the
+    # current ExodusSource.
+    __CHIGGER_CURRENT__ = None
+
     @staticmethod
     def validOptions():
         opt = base.ChiggerAlgorithm.validOptions()
@@ -148,6 +152,7 @@ class ExodusReader(base.ChiggerAlgorithm, VTKPythonAlgorithmBase):
         return opt
 
     def __init__(self, filename=None, **kwargs):
+        ExodusReader.__CHIGGER_CURRENT__ = self
         kwargs.setdefault('filename', filename)
         base.ChiggerAlgorithm.__init__(self, **kwargs)
         VTKPythonAlgorithmBase.__init__(self, nInputPorts=0, nOutputPorts=1, outputType='vtkMultiBlockDataSet')

@@ -61,6 +61,11 @@ class ExodusSource(base.ChiggerSource):
                 doc="When multiple sources are being used (e.g., NemesisReader) setting this to a "
                     "value will cause the various sources to be 'exploded' away from the center of "
                     "the entire object.")
+
+        # Exodus file
+        opt.add('reader', default=utils.get_current_exodus_reader(),
+                doc="ExodusReader object for extracting content for 3D visualization.")
+
         return opt
 
     @staticmethod
@@ -91,7 +96,6 @@ class ExodusSource(base.ChiggerSource):
 
     def __init__(self, reader, **kwargs):
 
-        self.__reader = reader
         self.__current_variable = None
 
         base.ChiggerSource.__init__(self,
@@ -99,6 +103,7 @@ class ExodusSource(base.ChiggerSource):
                                     nOutputPorts=1, outputType='vtkMultiBlockDataSet',
                                     **kwargs)
 
+        self.__reader = self.getOption('reader')
         self.SetInputConnection(self.__reader.GetOutputPort())
 
         self._addFilter(filters.ExtractBlockFilter, True)
