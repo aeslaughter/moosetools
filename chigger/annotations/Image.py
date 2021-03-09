@@ -135,15 +135,15 @@ class Image(Annotation):
         image_size = [extent[1]/window_size[0], extent[3]/window_size[1], 0]
         aspect = image_size[0] / image_size[1] # a = w/h
 
-        if self.isValid('width') and self.isValid('height'):
+        if self.isOptionValid('width') and self.isOptionValid('height'):
             image_size[0] = self.getOption('width')
             image_size[1] = self.getOption('height')
 
-        elif self.isValid('width'):
+        elif self.isOptionValid('width'):
             image_size[0] = self.getOption('width')
             image_size[1] = image_size[0] / aspect # h = w / a
 
-        elif self.isValid('height'):
+        elif self.isOptionValid('height'):
             image_size[1] = self.getOption('height')
             image_size[0] = image_size[1] * aspect # w = h * a
 

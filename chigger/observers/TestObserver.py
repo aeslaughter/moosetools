@@ -28,6 +28,9 @@ class TestObserver(ChiggerObserver):
         opt = ChiggerObserver.validOptions()
         opt.add('terminate', vtype=bool, default=True, doc="Exit after rendering.")
         opt.add('duration', vtype=(int, float), default=0.5, doc="Duration to wait in seconds for event trigger.")
+        opt.add('averaging', vtype=bool, default=False, doc="Control default setting for 'averaging' of image compare.")
+        opt.add('shift', vtype=bool, default=False, doc="Control default setting for 'shift' of image compare.")
+        opt.add('threshold', vtype=int, default=0, doc="Control default setting for 'threshold' of image compare.")
         return opt
 
     def __init__(self, *args, **kwargs):
@@ -112,17 +115,20 @@ class TestObserver(ChiggerObserver):
         """
         self.assertFunction(lambda: self._assertNotInLog(*args, **kwargs), traceback.extract_stack())
 
-    def _assertImage(self, filename, goldname=None, threshold=0, averaging=False, shift=False):
+    def _assertImage(self, filename, goldname=None, threshold=None, averaging=None, shift=None):
         """
         see assertImage
         """
+        if threshold is None: threshold = self.getOption('threshold')
+        if averaging is None: averaging = self.getOption('averaging')
+        if shift is None: shift = self.getOption('shift')
+
+        # Write the current window to file
+        self._window.write(filename=filename)
 
         # Read the gold file, and err if not found
-        goldname = goldname or  os.path.join(os.path.dirname(filename), 'gold', os.path.basename(filename))
+        goldname = goldname or os.path.join(os.path.dirname(filename), 'gold', os.path.basename(filename))
         if not os.path.exists(goldname):
-
-            # Write the current window to file
-            self._window.write(filename=filename)
 
             msg = "GOLD FILE DOES NOT EXIST\n"
             msg += "   GOLD: {}\n".format(goldname)
@@ -144,14 +150,13 @@ class TestObserver(ChiggerObserver):
             diff.SetThreshold(threshold)
             diff.SetAveraging(averaging)
             diff.SetAllowShift(shift)
+            diff.SetAverageThresholdFactor(1)
             diff.Update()
 
             # Get/report error
-            err = diff.GetThresholdedError()
+            err = diff.GetThresholdedError()# > diff.GetThreshold()
             msg = None
             if err:
-                # Write the current window to file
-                self._window.write(filename=filename)
 
                 # Write the image difference to file
                 diffname = os.path.join(os.path.dirname(filename), 'diff_{}'.format(os.path.basename(filename)))
