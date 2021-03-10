@@ -25,6 +25,8 @@ def main():
 
     window.start()
 
+    return test.status()
+
 class TestHelp(unittest.TestCase):
     def test(self):
         self.assertFalse(main(), "Failed to execute script without errors.")
