@@ -149,6 +149,7 @@ class Image(Annotation):
 
         return image_size
 
+    """
     def _highlight(self):
         if self.getOption('highlight'):
             xmin, ymin = self._vtkactor.GetPosition()
@@ -170,7 +171,7 @@ class Image(Annotation):
             self._outline.remove()
             del self._outline
             self._outline = None
-
+    """
 
     def _setSize(self, dx, dy):
          """

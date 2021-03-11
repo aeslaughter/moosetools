@@ -12,3 +12,4 @@ from .ChiggerObject import ChiggerObject, ChiggerObjectBase
 from .ChiggerAlgorithm import ChiggerAlgorithm
 from .ChiggerSource import ChiggerSourceBase, ChiggerSource, ChiggerSource2D
 from .ChiggerCompositeSource import ChiggerCompositeSource
+from .ChiggerTestCase import ChiggerTestCase

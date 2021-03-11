@@ -27,5 +27,19 @@ class Logo(Image):
         self._location = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'logos'))
 
     def _onRequestInformation(self, *args):
-        self.setOption('filename', os.path.join(self._location, '{}.png'.format(self.getOption('logo').lower())))
+        filename = None
+        basename = os.path.join(self._location, '{}'.format(self.getOption('logo').lower()))
+        white_logo = '{}_white.png'.format(basename)
+        black_logo = '{}_black.png'.format(basename)
+
+        if os.path.isfile(white_logo) and os.path.isfile(black_logo):
+            parent = self._viewport if self._viewport.getOption('layer') == 0 else self._viewport._window
+            if parent.isOptionValid('background', 'color') and (not parent.isOptionValid('background', 'color2')):
+                bg = parent.getOption('background', 'color')
+                filename = white_logo if sum(bg.rgb()) < 1.5 else black_logo
+
+        if filename is None:
+            filename = '{}.png'.format(basename)
+
+        self.setOption('filename', filename)
         Image._onRequestInformation(self, *args)

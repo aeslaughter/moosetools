@@ -152,7 +152,7 @@ class ChiggerObjectBase(object):
         # Sub-options case
         if args:
             for sub in args:
-                if not self._options.hasOption(sub):
+                if not self._options.hasParameter(sub):
                     msg = "The supplied sub-option '{}' does not exist.".format(sub)
                     mooseutils.mooseError(msg)
                 else:

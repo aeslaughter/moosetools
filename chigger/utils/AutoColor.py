@@ -6,25 +6,28 @@
 #*
 #* Licensed under LGPL 2.1, please see LICENSE for details
 #* https://www.gnu.org/licenses/lgpl-2.1.html
-from .Option import Option
-
 class Color(object):
     """A Class to handle RGB color values"""
 
     def __init__(self, *args):
-        self.__option = Option('__Color__', vtype=(int, float), size=3,
-                               verify=(self.__verify, "The supplied RGB color values must be in range [0,1]"))
-
-        if args:
-            self.__option.value = args
+        if (len(args) == 1) and isinstance(args[0], Color):
+            self._rgb = args[0].rgb()
+        elif (len(args) == 3) and all([v >= 0 and v <= 1 for v in args]):
+            self._rgb = args
+        else:
+            raise Exception('WRONG')
+            self._rgb = None
 
     def rgb(self):
         """Return the RGB values"""
-        return self.__option.value
+        return self._rgb
 
-    def __verify(self, values):
-        """Verify that the supplied values are in the correct range"""
-        return all([v >= 0 and v <= 1 for v in values])
+    def __ne__(self, other):
+        return self._rgb != getattr(other, 'rgb', lambda: None)()
+
+    def __eq__(self, other):
+        return self._rgb == getattr(other, 'rgb', lambda: None)()
+
 
 class AutoColor(Color):
     """A Class to handle RGB color values that operate with background color automatically."""

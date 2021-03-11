@@ -57,19 +57,6 @@ class TestObserver(ChiggerObserver):
         """
         self.assertFunction(lambda: self._pressKey(key, shift))
 
-    def moveMouse(self, x, y):
-        """
-        Simulate a mouse movement.
-
-        Inputs:
-            x[float]: Position relative to the current window size in the horizontal direction.
-            y[float]: Position relative to the current window size in the vertical direction.
-        """
-        self.assertFunction(lambda: self._moveMouse(x, y))
-
-    def pressLeftMouseButton(self):
-        self.assertFunction(lambda: self._pressLeftMouseButton())
-
     def assertFunction(self, func, stack=None):
         self._actions.append((func, stack or traceback.extract_stack()))
 
@@ -249,28 +236,6 @@ class TestObserver(ChiggerObserver):
             msg += "  CONSOLE:\n{}".format(stdout)
 
         return err > 0, msg
-
-    def _pressLeftMouseButton(self):
-        """
-        Simulate a left mouse click.
-        """
-        vtkinteractor = self._window.getVTKInteractor()
-        vtkinteractor.InvokeEvent(vtk.vtkCommand.LeftButtonPressEvent, vtkinteractor)
-        return 0, None
-
-    def _moveMouse(self, x, y):
-        # Determine relative position
-        sz = self._window.getVTKWindow().GetSize()
-        pos = [sz[0] * x, sz[1] * y]
-
-
-        print(pos)
-
-        # Move the mouse
-        vtkinteractor = self._window.getVTKInteractor()
-        vtkinteractor.SetEventPosition(int(pos[0]), int(pos[1]))
-        vtkinteractor.InvokeEvent(vtk.vtkCommand.MouseMoveEvent, vtkinteractor)
-        return 0, None
 
     def _pressKey(self, key, shift=False):
         vtkinteractor = self._window.getVTKInteractor()

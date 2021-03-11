@@ -57,10 +57,11 @@ class InputParameters(object):
             return
 
         elif '_' in args[0]:
-            group, subname = args[0].split('_', 1)
+            group, subname = args[0].rsplit('_', 1)
             if (group in self.__parameters) and (
                     isinstance(self.__parameters[group].value, InputParameters) or
                 (isinstance(self.__parameters[group].default, InputParameters))):
+
                 self.__errorHelper(
                     "Cannot add a parameter with the name '{}', "
                     "a sub parameter exists with the name '{}'.", args[0], group)

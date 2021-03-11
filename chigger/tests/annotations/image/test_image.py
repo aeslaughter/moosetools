@@ -7,63 +7,45 @@
 #*
 #* Licensed under LGPL 2.1, please see LICENSE for details
 #* https://www.gnu.org/licenses/lgpl-2.1.html
-import unittest
 import chigger
 
-class TestImage(unittest.TestCase):
+class TestImage(chigger.base.ChiggerTestCase):
     def setUp(self):
-        self._window = chigger.Window(size=(300,300))
-        self._viewport = chigger.Viewport()
+        super().setUp()
         self._moose = chigger.annotations.Image(filename='../../../logos/moose.png')
-        self._test = chigger.observers.TestObserver()
+
 
     def testDefault(self):
-        self._window.write(filename='default.png')
-        self._test.assertImage('default.png', threshold=50, averaging=True, shift=True)
-        self._window.start()
-        self.assertFalse(self._test.status())
+        self.assertImage('default.png')
 
     def testWidth(self):
-        self._test.setObjectOptions(self._moose, width=1)
-        self._test.assertImage('width.png')
-        self._window.start()
-        self.assertFalse(self._test.status())
+        self.setObjectOptions(self._moose, width=1)
+        self.assertImage('width.png')
 
     def testHeight(self):
-        self._test.setObjectOptions(self._moose, height=1)
-        self._test.assertImage('height.png')
-        self._window.start()
-        self.assertFalse(self._test.status())
+        self.setObjectOptions(self._moose, height=1)
+        self.assertImage('height.png')
 
     def testHeightAndWidth(self):
-        self._test.setObjectOptions(self._moose, width=1, height=1)
-        self._test.assertImage('height_and_width.png')
-        self._window.start()
-        self.assertFalse(self._test.status())
+        self.setObjectOptions(self._moose, width=1, height=1)
+        self.assertImage('height_and_width.png')
 
     def testPosition(self):
-        self._test.setObjectOptions(self._moose, position=(0.5,0.5))
-        self._test.assertImage('position.png', threshold=25, averaging=True, shift=True)
-        self._window.start()
-        self.assertFalse(self._test.status())
+        self.setObjectOptions(self._moose, position=(0.5,0.5))
+        self.assertImage('position.png')
 
     def testHorizontalAlign(self):
-        self._test.setObjectOptions(self._moose, halign='center', width=1, position=(0.5,0.5))
-        self._test.assertImage('horizontal_alignment.png')
-        self._window.start()
-        self.assertFalse(self._test.status())
+        self.setObjectOptions(self._moose, halign='center', width=1, position=(0.5,0.5))
+        self.assertImage('horizontal_alignment.png')
 
     def testVeriticalAlign(self):
-        self._test.setObjectOptions(self._moose, valign='top', position=(0,1))
-        self._test.assertImage('vertical_alignment.png', threshold=50, averaging=True, shift=True)
-        self._window.start()
-        self.assertFalse(self._test.status())
+        self.setObjectOptions(self._moose, valign='top', position=(0,1))
+        self.assertImage('vertical_alignment.png')
 
     def testOpacity(self):
-        self._test.setObjectOptions(self._moose, opacity=0.2)
-        self._test.assertImage('opacity.png')
-        self._window.start()
-        self.assertFalse(self._test.status())
+        self.setObjectOptions(self._moose, opacity=0.2)
+        self.assertImage('opacity.png')
 
 if __name__ == '__main__':
+    import unittest
     unittest.main(verbosity=2)

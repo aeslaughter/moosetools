@@ -6,7 +6,7 @@
 #*
 #* Licensed under LGPL 2.1, please see LICENSE for details
 #* https://www.gnu.org/licenses/lgpl-2.1.html
-from .AutoColor import AutoColor
+from .AutoColor import Color, AutoColor
 from .Options import Options
 
 def validOptions():
@@ -14,7 +14,7 @@ def validOptions():
     opt = Options()
 
     font = Options()
-    font.add('color', vtype=AutoColor, doc="The text color.")
+    font.add('color', vtype=(AutoColor, Color), doc="The text color.")
     font.add('opacity', default=1., vtype=(int, float),
             verify=(lambda v: v>=0 and v<=1, "The supplied value must be in range [0,1]"),
             doc="The text opacity.")
@@ -35,12 +35,12 @@ def validOptions():
     opt.add('frame', default=frame, vtype=Options, doc="Frame options")
 
     bg = Options()
-    bg.add('on', vtype=bool, default=False, doc="Enable background color")
-    bg.add('color', size=3, vtype=(int, float), doc="The color of the text background, defaults to font color")
+    #bg.add('on', vtype=bool, default=False, doc="Enable background color")
+    bg.add('color', vtype=(AutoColor, Color), doc="The color of the text background, defaults to font color")
     bg.add('opacity', default=1., vtype=(int, float),
             verify=(lambda v: v>0 and v<=1, "The supplied value must in range (0,1]"),
             doc="The opacity of the text background.")
-    opt.add('background', default=bg, vtype=Options, doc="Background options")
+    opt.add('background_font', default=bg, vtype=Options, doc="Background options")
 
     opt.add('rotate', default=0., vtype=(int, float),
             verify=(lambda v: v>=0 and v<360, "The supplied value must in range [0,360)"),
@@ -110,8 +110,8 @@ def applyOptions(actor, viewport, tprop, opt):
     frame.assign('width', tprop.SetFrameWidth)
 
     # BACKGROUND
-    bg = opt.get('background')
-    if bg.get('on'):
+    bg = opt.get('background_font')
+    if bg.isValid('color'):
         bg.assign('color', tprop.SetBackgroundColor)
         bg.assign('opacity', tprop.SetBackgroundOpacity)
     else:

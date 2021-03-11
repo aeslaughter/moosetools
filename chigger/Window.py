@@ -51,6 +51,7 @@ class Window(base.ChiggerAlgorithm):
 
         # Background settings
         opt += utils.BackgroundOptions.validOptions()
+        opt.set('background', dict(color=utils.Color(0,0,0)))
 
         # Writer settings
         #TODO: imagename ?
@@ -185,6 +186,7 @@ class Window(base.ChiggerAlgorithm):
 
         # Auto Background adjustments
         children = [source for viewport in self.__viewports for source in viewport.sources()]
+        utils.auto_adjust_color(self, children)
 
         # Interactive/Observer settings
         if self.getOption('offscreen'):
@@ -228,6 +230,8 @@ class Window(base.ChiggerAlgorithm):
         self.assignOption('smoothing', self.__vtkwindow.SetPointSmoothing)
         self.assignOption('multisamples', self.__vtkwindow.SetMultiSamples)
         self.assignOption('size', self.__vtkwindow.SetSize)
+
+
 
     def _onRequestData(self, *args):
         base.ChiggerAlgorithm._onRequestData(self, *args)

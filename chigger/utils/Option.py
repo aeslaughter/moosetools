@@ -9,6 +9,8 @@
 import vtk
 import weakref
 import parameters
+from .AutoColor import Color, AutoColor
+
 class Option(parameters.Parameter):
     """
     Custom Parameter object for chigger:
@@ -49,23 +51,6 @@ class Option(parameters.Parameter):
 
     @value.setter
     def value(self, val):
-        """
-        Sets the value and performs a myriad of consistency checks and updates modified time
-        """
-        # Automatically convert to Color type
-        from .AutoColor import AutoColor, Color #cyclic
-        if isinstance(self._Parameter__value, Color):
-            old_value = self._Parameter__value._Color__option.value
-            self._Parameter__value._Color__option.value = val
-            if old_value != val:
-                self.__modified.Modified()
-            return
-
-        elif (self.vtype is not None) and isinstance(val, tuple):
-            if (AutoColor in self.vtype):
-                val = AutoColor(*val)
-            elif (Color in self.vtype):
-                val = Color(*val)
 
         # Convert vtkObjects to weakref
         if isinstance(val, vtk.vtkObject):

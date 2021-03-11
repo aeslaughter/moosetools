@@ -166,7 +166,8 @@ class Viewport(utils.KeyBindingMixin, base.ChiggerAlgorithm):
                          self._vtkrenderer.GetLayer())
 
         # Auto adjust background color
-        utils.auto_adjust_color(self, self.__sources)
+        if self._vtkrenderer.GetLayer() == 0:
+            utils.auto_adjust_color(self, self.__sources)
 
     def getVTKRenderer(self):
         """Return the vtk.vtkRenderer object."""
@@ -214,5 +215,5 @@ class Background(Viewport):
         opt.set('highlight', False)
         opt.set('interactive', True)
         opt.set('layer', 0)
-        opt.set('background', 'color', utils.AutoColor(0., 0., 0.))
+        opt.set('background', 'color', utils.Color(0., 0., 0.))
         return opt

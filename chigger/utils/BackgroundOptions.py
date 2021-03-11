@@ -14,7 +14,7 @@ def validOptions():
     opt = Options()
 
     bg = Options()
-    bg.add('color', vtype=AutoColor, doc="The primary background color")
+    bg.add('color', vtype=(Color, AutoColor), doc="The primary background color")
     bg.add('color2', vtype=Color, doc="The secondary background color, when specified a gradient background is enabled")
     bg.add('opacity', default=0, vtype=(int, float),
            verify=(lambda v: v>=0 and v <= 1, "The 'opacity' must be in the range [0,1]"),
