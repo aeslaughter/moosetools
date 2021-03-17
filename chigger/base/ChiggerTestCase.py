@@ -17,8 +17,8 @@ class ChiggerTestCase(unittest.TestCase):
     def pressKey(self, *args, **kwargs):
         self._test.pressKey(*args, **kwargs)
 
-    def setObjectOptions(self, *args, **kwargs):
-        self._test.setObjectOptions(*args, **kwargs)
+    def setObjectOptions(self, obj, *args, **kwargs):
+        self._test.setObjectOptions(obj, *args, **kwargs)
 
     def assertImage(self, *args, **kwargs):
         self._test.assertImage(*args, **kwargs)
@@ -33,7 +33,7 @@ class ChiggerTestCase(unittest.TestCase):
         self._test.assertInLog(*args, **kwargs)
 
     def assertNotInLog(self, *args, **kwargs):
-        self._test.assertInLog(*args, **kwargs)
+        self._test.assertNotInLog(*args, **kwargs)
 
     def _callTestMethod(self, method):
         unittest.TestCase._callTestMethod(self, method)

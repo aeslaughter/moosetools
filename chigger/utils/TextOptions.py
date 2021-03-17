@@ -35,12 +35,11 @@ def validOptions():
     opt.add('frame', default=frame, vtype=Options, doc="Frame options")
 
     bg = Options()
-    #bg.add('on', vtype=bool, default=False, doc="Enable background color")
-    bg.add('color', vtype=(AutoColor, Color), doc="The color of the text background, defaults to font color")
+    bg.add('color', vtype=Color, doc="The color of the text background.")
     bg.add('opacity', default=1., vtype=(int, float),
-            verify=(lambda v: v>0 and v<=1, "The supplied value must in range (0,1]"),
+            verify=(lambda v: v>0 and v<=1, "The supplied value must be in range (0,1]"),
             doc="The opacity of the text background.")
-    opt.add('background_font', default=bg, vtype=Options, doc="Background options")
+    opt.add('background', default=bg, vtype=Options, doc="Background options")
 
     opt.add('rotate', default=0., vtype=(int, float),
             verify=(lambda v: v>=0 and v<360, "The supplied value must in range [0,360)"),
@@ -60,6 +59,10 @@ def applyOptions(actor, viewport, tprop, opt):
         tprop: A vtk.vtkTextProperty object for applying options.
         options: The Options object containing the settings to apply.
     """
+    # Do nothing if text does not exist
+    if not actor.GetInput():
+        return
+
     # This makes the rendered font fill the entire region (try it, set font_size = 1)
     tprop.SetUseTightBoundingBox(True)
 
@@ -110,7 +113,7 @@ def applyOptions(actor, viewport, tprop, opt):
     frame.assign('width', tprop.SetFrameWidth)
 
     # BACKGROUND
-    bg = opt.get('background_font')
+    bg = opt.get('background')
     if bg.isValid('color'):
         bg.assign('color', tprop.SetBackgroundColor)
         bg.assign('opacity', tprop.SetBackgroundOpacity)

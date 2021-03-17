@@ -44,8 +44,8 @@ class TestObserver(ChiggerObserver):
     def status(self):
         return self._retcode
 
-    def setObjectOptions(self, obj, **kwargs):
-        self.assertFunction(lambda: self._setObjectOptions(obj, **kwargs))
+    def setObjectOptions(self, obj, *args, **kwargs):
+        self.assertFunction(lambda: self._setObjectOptions(obj, *args, **kwargs))
 
     def pressKey(self, key, shift=False):
         """
@@ -162,13 +162,15 @@ class TestObserver(ChiggerObserver):
 
         return err > 0, msg
 
-    def _assertInLog(self, text, obj, key=None, shift=False, **kwargs):
+    def _assertInLog(self, text, obj, key=None, shift=False, args=None, kwargs=None):
         formatter = chigger.ChiggerFormatter()
         func = formatter.format
+        if kwargs is None: kwargs = dict()
+        if args is None: args = set()
         with mock.patch('chigger.ChiggerFormatter.format') as log:
             log.side_effect = func
             if obj is not None:
-                self._setObjectOptions(obj, **kwargs)
+                self._setObjectOptions(obj, *args, **kwargs)
             if key is not None:
                 self._pressKey(key, shift=shift)
 
@@ -186,7 +188,7 @@ class TestObserver(ChiggerObserver):
         formatter = chigger.ChiggerFormatter()
         func = formatter.format
         with mock.patch('chigger.ChiggerFormatter.format') as log:
-            log.side_effect = func
+            #log.side_effect = func
             if obj is not None:
                 self._setObjectOptions(obj, **kwargs)
             if key is not None:
@@ -246,12 +248,11 @@ class TestObserver(ChiggerObserver):
         vtkinteractor.SetShiftKey(False)
         return 0, None
 
-    def _setObjectOptions(self, obj, **kwargs):
-        obj.setOptions(**kwargs)
+    def _setObjectOptions(self, obj, *args, **kwargs):
+        obj.setOptions(*args, **kwargs)
         self._window.render()
         self._window.resetClippingRange()
         self._window.resetCamera()
-
 
     def _onEvent(self, *args, **kwargs):
         self.debug("Execute event")

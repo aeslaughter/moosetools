@@ -20,7 +20,7 @@ class TextBase(Annotation):
     def validOptions():
         opt = Annotation.validOptions()
         opt += utils.TextOptions.validOptions()
-        opt.add('text', vtype=str, doc="The text to display.")
+        opt.add('text', vtype=str, required=True, doc="The text to display.")
         return opt
 
     @staticmethod
