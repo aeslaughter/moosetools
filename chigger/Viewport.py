@@ -150,7 +150,7 @@ class Viewport(utils.KeyBindingMixin, base.ChiggerAlgorithm):
         # Add/Remove highlight
         if self.getOption('highlight') and (self.__outline is None):
             self.__outline = geometric.Outline2D(viewport=self, xmax=0.9999, ymax=0.9999,
-                                                 color=(1,1,0), linewidth=3, pickable=False)
+                                                 color=utils.Color(1,1,0), linewidth=3, pickable=False)
         elif (not self.getOption('highlight')) and (self.__outline is not None):
             self.__outline.remove()
             del self.__outline

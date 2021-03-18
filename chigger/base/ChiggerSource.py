@@ -202,7 +202,7 @@ class ChiggerSourceBase(utils.KeyBindingMixin, ChiggerAlgorithm):
             obj_type = geometric.Highlight if is_3D else geometric.Highlight2D
             offset = 0.05 if is_3D else 0.02
             self._outline = obj_type(viewport=self._viewport, source=self, pickable=False,
-                                     linewidth=3, color=(1,1,0))
+                                     linewidth=3, color=utils.Color(1,1,0))
         elif (not self.getOption('highlight')) and (self._outline is not None):
             self._outline.remove()
             del self._outline
@@ -232,12 +232,12 @@ class ChiggerSource(ChiggerSourceBase):
         opt.add('representation', default='surface', allow=('surface', 'wireframe', 'points'),
                 doc="View volume representation.")
 
-        opt.add('edges', default=False, vtype=bool,
-                doc="Enable edges on the rendered object.")
-        opt.add('edgecolor', default=(0.5,)*3, array=True, size=3, vtype=(int, float),
-                doc="The color of the edges, 'edges=True' must be set.")
-        opt.add('edgewidth', default=1, vtype=(float, int),
-                doc="The width of the edges, 'edges=True' must be set.")
+        #opt.add('edges', default=False, vtype=bool,
+        #        doc="Enable edges on the rendered object.")
+        #opt.add('edgecolor', default=(0.5,)*3, array=True, size=3, vtype=(int, float),
+        #        doc="The color of the edges, 'edges=True' must be set.")
+        #opt.add('edgewidth', default=1, vtype=(float, int),
+        #        doc="The width of the edges, 'edges=True' must be set.")
 
         opt.add('lines_as_tubes', default=False, vtype=bool,
                 doc="Toggle rendering 1D lines as tubes.")
@@ -255,9 +255,9 @@ class ChiggerSource(ChiggerSourceBase):
         elif rep == 'points':
             self._vtkactor.GetProperty().SetRepresentationToPoints()
 
-        self.assignOption('edges', self._vtkactor.GetProperty().SetEdgeVisibility)
-        self.assignOption('edgecolor', self._vtkactor.GetProperty().SetEdgeColor)
-        self.assignOption('edgewidth', self._vtkactor.GetProperty().SetLineWidth)
+        #self.assignOption('edges', self._vtkactor.GetProperty().SetEdgeVisibility)
+        #self.assignOption('edgecolor', self._vtkactor.GetProperty().SetEdgeColor)
+        #self.assignOption('edgewidth', self._vtkactor.GetProperty().SetLineWidth)
 
         self.assignOption('lines_as_tubes', self._vtkactor.GetProperty().SetRenderLinesAsTubes)
 
