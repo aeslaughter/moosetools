@@ -20,7 +20,6 @@ class TextBase(Annotation):
     def validOptions():
         opt = Annotation.validOptions()
         opt += utils.TextOptions.validOptions()
-        opt.add('text', vtype=str, required=True, doc="The text to display.")
         return opt
 
     @staticmethod
@@ -47,7 +46,6 @@ class TextBase(Annotation):
         self._vtkactor.GetPosition2Coordinate().SetCoordinateSystemToNormalizedViewport()
 
     def _onRequestInformation(self, *args):
-        self.assignOption('text', self._vtkactor.SetInput)
         self.assignOption('position', self._vtkactor.SetPosition)
         utils.TextOptions.applyOptions(self._vtkactor, self._viewport.getVTKRenderer(),
                                        self._vtkactor.GetTextProperty(), self._options)
@@ -55,11 +53,11 @@ class TextBase(Annotation):
         # Do this late so that the highlight function overrides the current frame settings
         Annotation._onRequestInformation(self, *args)
 
-    def _highlight(self):
-        if self.getOption('highlight'):
-            self._vtkactor.GetTextProperty().SetFrame(True)
-            self._vtkactor.GetTextProperty().SetFrameColor((1,1,0))
-            self._vtkactor.GetTextProperty().SetFrameWidth(3)
+    #def _highlight(self):
+    #    if self.getOption('highlight'):
+    #        self._vtkactor.GetTextProperty().SetFrame(True)
+    #        self._vtkactor.GetTextProperty().SetFrameColor((1,1,0))
+    #        self._vtkactor.GetTextProperty().SetFrameWidth(3)
 
     def _incrementFont(self, delta):
         font = self.getOption('font')

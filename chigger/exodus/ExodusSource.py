@@ -63,7 +63,7 @@ class ExodusSource(base.ChiggerSource):
                     "the entire object.")
 
         # Exodus file
-        opt.add('reader', default=utils.get_current_exodus_reader(),
+        opt.add('reader', default=utils.get_current_exodus_reader(), required=True,
                 doc="ExodusReader object for extracting content for 3D visualization.")
 
         return opt
@@ -94,7 +94,7 @@ class ExodusSource(base.ChiggerSource):
         """
         return bindings
 
-    def __init__(self, reader, **kwargs):
+    def __init__(self, **kwargs):
 
         self.__current_variable = None
 

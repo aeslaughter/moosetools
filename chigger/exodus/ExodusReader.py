@@ -151,9 +151,8 @@ class ExodusReader(base.ChiggerAlgorithm, VTKPythonAlgorithmBase):
                     "becomes unloaded.")
         return opt
 
-    def __init__(self, filename=None, **kwargs):
+    def __init__(self, **kwargs):
         ExodusReader.__CHIGGER_CURRENT__ = self
-        kwargs.setdefault('filename', filename)
         base.ChiggerAlgorithm.__init__(self, **kwargs)
         VTKPythonAlgorithmBase.__init__(self, nInputPorts=0, nOutputPorts=1, outputType='vtkMultiBlockDataSet')
 

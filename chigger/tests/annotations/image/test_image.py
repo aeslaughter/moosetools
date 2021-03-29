@@ -14,7 +14,6 @@ class TestImage(chigger.base.ChiggerTestCase):
         super().setUp()
         self._moose = chigger.annotations.Image(filename='../../../logos/moose.png')
 
-
     def testDefault(self):
         self.assertImage('default.png')
 

@@ -7,20 +7,19 @@
 #*
 #* Licensed under LGPL 2.1, please see LICENSE for details
 #* https://www.gnu.org/licenses/lgpl-2.1.html
-import unittest
 import chigger
 
-class TestAdapt(chigger.base.ChiggerTestCase):
+class TestTime(chigger.base.ChiggerTestCase):
     def setUp(self):
         super().setUp()
-        self._reader = chigger.exodus.ExodusReader(filename='../input/step10_micro_out.e', timestep=0)
-        self._mug = chigger.exodus.ExodusSource(variable='phi', lim=(0, 1))
+        self._time = chigger.annotations.Time(seconds=852460230.1)
 
     def testDefault(self):
-        for i in [0,4,9]:
-            filename = 'adapt_' + str(i) + '.png'
-            self.setObjectOptions(self._reader, timestep=i)
-            self.assertImage(filename)
+        self.assertImage('default.png')
+
+    def testChange(self):
+        self.setObjectOptions(self._time, weeks=500)
+        self.assertImage('change.png')
 
 if __name__ == '__main__':
     import unittest

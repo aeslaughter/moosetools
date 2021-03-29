@@ -1,5 +1,8 @@
+import sys
 import chigger
 import unittest
+
+@unittest.skipIf(sys.version_info.major == 3 and sys.version_info.minor < 8, "Requires python 3.8 or greater")
 class ChiggerTestCase(unittest.TestCase):
     """
     Base test class for testing chigger functionality.
@@ -36,6 +39,7 @@ class ChiggerTestCase(unittest.TestCase):
         self._test.assertNotInLog(*args, **kwargs)
 
     def _callTestMethod(self, method):
+        """Only exists in python 3.8 or greater."""
         unittest.TestCase._callTestMethod(self, method)
         self._window.start()
         self.assertFalse(self._test.status())

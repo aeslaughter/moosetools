@@ -15,31 +15,31 @@ class TestFont(chigger.base.ChiggerTestCase):
         self._text = chigger.annotations.Text(text='This is a test.')
 
     def testDefault(self):
-        self._test.assertImage('default.png')
+        self.assertImage('default.png')
 
     def testColor(self):
         self.setObjectOptions(self._text, font_color=chigger.utils.Color(1,0,1))
-        self._test.assertImage('font_color.png')
+        self.assertImage('font_color.png')
 
     def testOpacity(self):
         self.setObjectOptions(self._text, font_opacity=0.2)
-        self._test.assertImage('font_opacity.png')
+        self.assertImage('font_opacity.png')
 
     def testSize(self):
         self.setObjectOptions(self._text, font_size=1)
-        self._test.assertImage('font_size.png')
+        self.assertImage('font_size.png')
 
     def testItalic(self):
         self.setObjectOptions(self._text, font_italic=True)
-        self._test.assertImage('font_italic.png')
+        self.assertImage('font_italic.png')
 
     def testBold(self):
         self.setObjectOptions(self._text, font_bold=True)
-        self._test.assertImage('font_bold.png')
+        self.assertImage('font_bold.png')
 
     def testFamily(self):
         self.setObjectOptions(self._text, font_family='times')
-        self._test.assertImage('font_family.png')
+        self.assertImage('font_family.png')
 
     def testErrors(self):
         self.assertInLog("The supplied value must be in range [0,1]",
@@ -59,15 +59,15 @@ class TestFrame(chigger.base.ChiggerTestCase):
 
     def testOn(self):
         self.setObjectOptions(self._text, 'frame', on=True)
-        self._test.assertImage('frame_on.png')
+        self.assertImage('frame_on.png')
 
     def testColor(self):
         self.setObjectOptions(self._text, 'frame', on=True, width=10, color=(0.2, 0.7, 0.8))
-        self._test.assertImage('frame_color.png')
+        self.assertImage('frame_color.png')
 
     def testWidth(self):
         self.setObjectOptions(self._text, frame_on=True, frame_width=10)
-        self._test.assertImage('frame_width.png')
+        self.assertImage('frame_width.png')
 
 class TestBackground(chigger.base.ChiggerTestCase):
     def setUp(self):
@@ -76,11 +76,11 @@ class TestBackground(chigger.base.ChiggerTestCase):
 
     def testColor(self):
         self.setObjectOptions(self._text, background_color=chigger.utils.Color(1,0,1))
-        self._test.assertImage('background_color.png')
+        self.assertImage('background_color.png')
 
     def testOpacity(self):
         self.setObjectOptions(self._text, 'background', color=chigger.utils.Color(1,0,1), opacity=0.2)
-        self._test.assertImage('background_opacity.png')
+        self.assertImage('background_opacity.png')
 
     def testErrors(self):
         self.assertInLog("The supplied value must be in range (0,1]",
