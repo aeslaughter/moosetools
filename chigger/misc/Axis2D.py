@@ -21,16 +21,16 @@ class Axis2D(base.ChiggerSource):
     VTKACTORTYPE = vtk.vtkAxisActor2D#vtk.vtkContextActor
     #VTKMAPPERTYPE = vtk.vtkPolyDataMapper2D#None
 
-    __TEXTKEYS__ = utils.TextOptions.validOptions().keys()
+    __TEXTKEYS__ = utils.TextParams.validParams().keys()
 
     @staticmethod
-    def validOptions():
-        opt = base.ChiggerSource.validOptions()
+    def validParams():
+        opt = base.ChiggerSource.validParams()
 
-        # Axis Line Options
+        # Axis Line Params
         opt.set('linewidth', 1)
 
-        # Title and label Options
+        # Title and label Params
         # This object includes general properties ('fontcolor', 'fontopacity', ...) as well as
         # title and label specific properties ('title_fontcolor', ..., 'label_fontcolor'). The
         # default 'fontcolor' and 'fontopacity' are removed to allow the the 'color' and 'opacity'
@@ -38,12 +38,12 @@ class Axis2D(base.ChiggerSource):
         opt.add('title', vtype=str, doc="The title for the axis.")
         opt.add('title_position', 0.5, vtype=(int, float),
                 doc="Set the title position between 0 (start) and 1 (end).")
-        opt.append(utils.TextOptions.validOptions(), exclude=['opacity', 'color'])
-        opt.append(utils.TextOptions.validOptions(), prefix='title_', unset=True)
-        opt.append(utils.TextOptions.validOptions(), prefix='label_', unset=True)
+        opt.append(utils.TextParams.validParams(), exclude=['opacity', 'color'])
+        opt.append(utils.TextParams.validParams(), prefix='title_', unset=True)
+        opt.append(utils.TextParams.validParams(), prefix='label_', unset=True)
 
-        #opt += utils.TextOptions.validOptions(prefix='title', unset=True)
-        #opt += utils.TextOptions.validOptions(prefix='label', unset=True)
+        #opt += utils.TextParams.validParams(prefix='title', unset=True)
+        #opt += utils.TextParams.validParams(prefix='label', unset=True)
         #opt.set('fontcolor', None)
         #opt.set('fontopacity', None)
         #opt.set('fontitalic', False)
@@ -77,51 +77,51 @@ class Axis2D(base.ChiggerSource):
 
 
 
-    def applyOptions(self):
+    def applyParams(self):
         """
         Update the vtkAxis with given settings. (override)
 
         Inputs:
             see ChiggerFilterSourceBase
         """
-        base.ChiggerSource.applyOptions(self)
+        base.ChiggerSource.applyParams(self)
 
         # Location
-        self._vtkactor.SetPoint1(*self.getOption('point1'))
-        self._vtkactor.SetPoint2(*self.getOption('point2'))
+        self._vtkactor.SetPoint1(*self.getParam('point1'))
+        self._vtkactor.SetPoint2(*self.getParam('point2'))
 
         # Title
-        if self.isOptionValid('title'):
+        if self.isParamValid('title'):
             self._vtkactor.SetTitleVisibility(True)
-            self._vtkactor.SetTitle(self.getOption('title'))
+            self._vtkactor.SetTitle(self.getParam('title'))
         else:
             self._vtkactor.SetTitleVisibility(False)
-        self.assignOption('title_position', self._vtkactor.SetTitlePosition)
+        self.assignParam('title_position', self._vtkactor.SetTitlePosition)
 
         # The default font color and opacity should match the 'color' and 'opactity' options
         #if not self.isValid('fontcolor'):
-        #    self._options.set('fontcolor', self.getOption('color'))
+        #    self._parameters.set('fontcolor', self.getParam('color'))
 
         #if not self.isValid('fontopacity'):
-        #    self._options.set('fontopacity', self.getOption('opacity'))
+        #    self._parameters.set('fontopacity', self.getParam('opacity'))
 
         # Set the values of the title_
         for name in self.__TEXTKEYS__:
             for subname in ['title', 'label']:
                 tname = '{}_{}'.format(subname, name)
-                if not self.isOptionValid(tname):
-                    self._options.set(tname, self._options.get(name))
+                if not self.isParamValid(tname):
+                    self._parameters.set(tname, self._parameters.get(name))
 
-        utils.TextOptions.applyOptions(self._vtkactor.GetTitleTextProperty(), self._options, 'title')
-        utils.TextOptions.applyOptions(self._vtkactor.GetLabelTextProperty(), self._options, 'label')
+        utils.TextParams.applyParams(self._vtkactor.GetTitleTextProperty(), self._parameters, 'title')
+        utils.TextParams.applyParams(self._vtkactor.GetLabelTextProperty(), self._parameters, 'label')
 
         # Range
-        self.assignOption('range', self._vtkactor.SetRange)
-        self.assignOption('adjust_range', self._vtkactor.SetAdjustLabels)
+        self.assignParam('range', self._vtkactor.SetRange)
+        self.assignParam('adjust_range', self._vtkactor.SetAdjustLabels)
 
         # Major tick marks
-        num = self.getOption('major_nticks')
-        if (num is not None) and self.getOption('adjust_range'):
+        num = self.getParam('major_nticks')
+        if (num is not None) and self.getParam('adjust_range'):
             self.warning("The 'major_number' option is not applied if 'adjust_range' is enabled.")
         if num is not None:
             if (num > 0):
@@ -130,13 +130,13 @@ class Axis2D(base.ChiggerSource):
             else:
                 self._vtkactor.SetTickVisibility(False)
 
-        self.assignOption('major_length', self._vtkactor.SetTickLength)
-        self.assignOption('major_offset', self._vtkactor.SetTickOffset)
+        self.assignParam('major_length', self._vtkactor.SetTickLength)
+        self.assignParam('major_offset', self._vtkactor.SetTickOffset)
 
         # Minor tick marks
-        self.assignOption('minor_nticks', self._vtkactor.SetNumberOfMinorTicks)
-        self.assignOption('minor_length', self._vtkactor.SetMinorTickLength)
+        self.assignParam('minor_nticks', self._vtkactor.SetNumberOfMinorTicks)
+        self.assignParam('minor_length', self._vtkactor.SetMinorTickLength)
 
         # Axis Line
-        self.assignOption('axis', self._vtkactor.SetAxisVisibility)
-        self.assignOption('format', self._vtkactor.SetLabelFormat)
+        self.assignParam('axis', self._vtkactor.SetAxisVisibility)
+        self.assignParam('format', self._vtkactor.SetLabelFormat)

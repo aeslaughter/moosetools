@@ -17,9 +17,9 @@ class TextBase(Annotation):
     VTKACTORTYPE = vtk.vtkTextActor
 
     @staticmethod
-    def validOptions():
-        opt = Annotation.validOptions()
-        opt += utils.TextOptions.validOptions()
+    def validParams():
+        opt = Annotation.validParams()
+        opt += utils.TextParams.validParams()
         return opt
 
     @staticmethod
@@ -46,38 +46,38 @@ class TextBase(Annotation):
         self._vtkactor.GetPosition2Coordinate().SetCoordinateSystemToNormalizedViewport()
 
     def _onRequestInformation(self, *args):
-        self.assignOption('position', self._vtkactor.SetPosition)
-        utils.TextOptions.applyOptions(self._vtkactor, self._viewport.getVTKRenderer(),
-                                       self._vtkactor.GetTextProperty(), self._options)
+        self.assignParam('position', self._vtkactor.SetPosition)
+        utils.TextParams.applyParams(self._vtkactor, self._viewport.getVTKRenderer(),
+                                       self._vtkactor.GetTextProperty(), self._parameters)
 
         # Do this late so that the highlight function overrides the current frame settings
         Annotation._onRequestInformation(self, *args)
 
     #def _highlight(self):
-    #    if self.getOption('highlight'):
+    #    if self.getParam('highlight'):
     #        self._vtkactor.GetTextProperty().SetFrame(True)
     #        self._vtkactor.GetTextProperty().SetFrameColor((1,1,0))
     #        self._vtkactor.GetTextProperty().SetFrameWidth(3)
 
     def _incrementFont(self, delta):
-        font = self.getOption('font')
+        font = self.getParam('font')
         sz = font.get('size') + delta
         font.set(size=sz)
         self.printOption('font')
 
     def _incrementAlpha(self, delta):
-        opacity = self.getOption('opacity') + delta
+        opacity = self.getParam('opacity') + delta
         if opacity <= 1.:
-            self.setOptions(opacity=opacity)
+            self.setParams(opacity=opacity)
             self.printOption('opacity')
 
     def _incrementRotate(self, delta):
-        angle = self.getOption('rotate') + delta
+        angle = self.getParam('rotate') + delta
         print(angle)
         if angle > 360:
             angle = angle - 360
         elif angle < 0:
             angle = angle + 360
 
-        self.setOption('rotate', angle)
+        self.setParam('rotate', angle)
         self.printOption('rotate')

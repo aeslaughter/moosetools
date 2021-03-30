@@ -11,7 +11,7 @@ import weakref
 import parameters
 from .AutoColor import Color, AutoColor
 
-class Option(parameters.Parameter):
+class ChiggerParameter(parameters.Parameter):
     """
     Custom Parameter object for chigger:
 
@@ -28,7 +28,7 @@ class Option(parameters.Parameter):
     """
 
     def __init__(self, *args, **kwargs):
-        self.__modified = vtk.vtkTimeStamp()                # modified status, see Options class
+        self.__modified = vtk.vtkTimeStamp()                # modified status, see Params class
         parameters.Parameter.__init__(self, *args, **kwargs)
         self.__modified.Modified()
 
@@ -49,14 +49,13 @@ class Option(parameters.Parameter):
             return val()
         return val
 
-    @value.setter
-    def value(self, val):
+    def setValue(self, val):
 
         # Convert vtkObjects to weakref
         if isinstance(val, vtk.vtkObject):
             val = weakref.ref(val)
 
         old_value = self._Parameter__value
-        parameters.Parameter.value.fset(self, val)
+        parameters.Parameter.setValue(self, val)
         if old_value != self._Parameter__value:
             self.__modified.Modified()

@@ -9,13 +9,13 @@
 #* https://www.gnu.org/licenses/lgpl-2.1.html
 
 import vtk
-from .Options import Options
+from .ChiggerInputParameters import ChiggerInputParameters
 
-def validOptions(): #pylint: disable=invalid-name
+def validParams(): #pylint: disable=invalid-name
     """
-    Options specific to the legend.
+    Params specific to the legend.
     """
-    opt = Options()
+    opt = ChiggerInputParameters()
     opt.add('visible', default=True, vtype=bool,
             doc="Control the visibility of the legend.")
     opt.add('background', vtype=(int, float), size=3,
@@ -33,7 +33,7 @@ def validOptions(): #pylint: disable=invalid-name
     opt.add('border_width', doc="The border width.", vtype=(int, float))
     return opt
 
-def setOptions(vtkchart, vtkrenderer, opt): #pylint: disable=invalid-name
+def setParams(vtkchart, vtkrenderer, opt): #pylint: disable=invalid-name
     """
     A method for updating the legend options.
     """

@@ -16,11 +16,11 @@ from .. import utils
 class VolumeAxesSource(base.ChiggerSourceBase):
 
     @staticmethod
-    def validOptions():
-        opt = base.ChiggerResult.validOptions()
-        opt.add('xaxis', default=VolumeAxesSource.getAxisActorOptions(), doc="The x-axis options.")
-        opt.add('yaxis', default=VolumeAxesSource.getAxisActorOptions(), doc="The y-axis options.")
-        opt.add('zaxis', default=VolumeAxesSource.getAxisActorOptions(), doc="The z-axis options.")
+    def validParams():
+        opt = base.ChiggerResult.validParams()
+        opt.add('xaxis', default=VolumeAxesSource.getAxisActorParams(), doc="The x-axis options.")
+        opt.add('yaxis', default=VolumeAxesSource.getAxisActorParams(), doc="The y-axis options.")
+        opt.add('zaxis', default=VolumeAxesSource.getAxisActorParams(), doc="The z-axis options.")
         opt.add('point1', default=(0, 0, 0), vtype=(int, float), size=3,
                 doc="Lower corner of bounding box.")
         opt.add('point2', default=(1, 1, 1), vtype=(int, float), size=3,
@@ -29,11 +29,11 @@ class VolumeAxesSource(base.ChiggerSourceBase):
         return opt
 
     @staticmethod
-    def getAxisActorOptions():
+    def getAxisActorParams():
         """
         Return the options for a vtkAxis object.
         """
-        opt = utils.Options()
+        opt = utils.Params()
         opt.add('color', default=(1, 1, 1), vtype=(int, float), size=3,
                 doc="The color of the title, text, ticks, and axis line.")
         opt.add('minor_ticks', default=False, vtype=bool,
@@ -51,22 +51,22 @@ class VolumeAxesSource(base.ChiggerSourceBase):
         """
         super(VolumeAxesSource, self).update(**kwargs)
 
-        p0 = self.getOption('point1')
-        p1 = self.getOption('point2')
+        p0 = self.getParam('point1')
+        p1 = self.getParam('point2')
         bnds = [p0[0], p1[0], p0[1], p1[1], p0[2], p1[2]]
         self._vtkactor.SetBounds(*bnds)
 
         self._vtkactor.SetCamera(self._vtkrenderer.GetActiveCamera())
-        self.__updateAxisOptions('x')
-        self.__updateAxisOptions('y')
-        self.__updateAxisOptions('z')
+        self.__updateAxisParams('x')
+        self.__updateAxisParams('y')
+        self.__updateAxisParams('z')
 
         self._vtkactor.SetGridLineLocation(vtk.vtkCubeAxesActor.VTK_GRID_LINES_FURTHEST)
 
     def getBounds(self):
         return self._vtkactor.GetBounds()
 
-    def __updateAxisOptions(self, axis):
+    def __updateAxisParams(self, axis):
         """
         Helper for updating Axis level settings.
         """
@@ -74,7 +74,7 @@ class VolumeAxesSource(base.ChiggerSourceBase):
             mooseutils.mooseError("Must provide 'x', 'y', or 'z'.")
             return
 
-        opt = self.getOption(axis + 'axis')
+        opt = self.getParam(axis + 'axis')
         color = opt.get('color')
         comp = ['x', 'y', 'z'].index(axis)
         self._vtkactor.GetTitleTextProperty(comp).SetColor(*color)

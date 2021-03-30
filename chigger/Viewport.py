@@ -26,10 +26,10 @@ class Viewport(utils.KeyBindingMixin, base.ChiggerAlgorithm):
     __CHIGGER_CURRENT__ = None
 
     @classmethod
-    def validOptions(cls):
-        opt = base.ChiggerAlgorithm.validOptions()
-        opt += utils.KeyBindingMixin.validOptions()
-        opt += utils.BackgroundOptions.validOptions()
+    def validParams(cls):
+        opt = base.ChiggerAlgorithm.validParams()
+        opt += utils.KeyBindingMixin.validParams()
+        opt += utils.BackgroundParams.validParams()
 
         opt.add('light', vtype=(int, float),
                doc="Add a headlight with the given intensity to the viewport.")
@@ -100,7 +100,7 @@ class Viewport(utils.KeyBindingMixin, base.ChiggerAlgorithm):
     @property
     def _window(self):
         """Property so that self._window acts like the actual window object."""
-        return self.getOption('window')
+        return self.getParam('window')
 
     def add(self, arg):
 
@@ -141,26 +141,26 @@ class Viewport(utils.KeyBindingMixin, base.ChiggerAlgorithm):
     def _onRequestInformation(self, *args):
         base.ChiggerAlgorithm._onRequestInformation(self, *args)
 
-        vp = [self.getOption('xmin'), self.getOption('ymin'), self.getOption('xmax'), self.getOption('ymax')]
+        vp = [self.getParam('xmin'), self.getParam('ymin'), self.getParam('xmax'), self.getParam('ymax')]
         self._vtkrenderer.SetViewport(vp)
 
-        self.assignOption('layer', self._vtkrenderer.SetLayer)
-        self.assignOption('interactive', self._vtkrenderer.SetInteractive)
+        self.assignParam('layer', self._vtkrenderer.SetLayer)
+        self.assignParam('interactive', self._vtkrenderer.SetInteractive)
 
         # Add/Remove highlight
-        if self.getOption('highlight') and (self.__outline is None):
+        if self.getParam('highlight') and (self.__outline is None):
             self.__outline = geometric.Outline2D(viewport=self, xmax=0.9999, ymax=0.9999,
                                                  color=utils.Color(1,1,0), linewidth=3, pickable=False)
-        elif (not self.getOption('highlight')) and (self.__outline is not None):
+        elif (not self.getParam('highlight')) and (self.__outline is not None):
             self.__outline.remove()
             del self.__outline
             self.__outline = None
 
         # Background Setting
-        utils.BackgroundOptions.applyOptions(self.getVTKRenderer(),
-                                             self.getOption('background'))
+        utils.BackgroundParams.applyParams(self.getVTKRenderer(),
+                                             self.getParam('background'))
 
-        if (self.isOptionValid('background', 'color') or self.isOptionValid('background', 'color2')) and self.getOption('layer') != 0:
+        if (self.isParamValid('background', 'color') or self.isParamValid('background', 'color2')) and self.getParam('layer') != 0:
             self.warning("The 'layer' option is set to {} and 'background_color' and/or 'background_color2' " \
                          "option(s) were provided, the color will not change unless the 'layer' is 0",
                          self._vtkrenderer.GetLayer())
@@ -190,11 +190,11 @@ class Viewport(utils.KeyBindingMixin, base.ChiggerAlgorithm):
 
     def _setViewport(self, index, increment):
         names = ['xmin', 'ymin', 'xmax', 'ymax']
-        #x_min = self.getOption('xmin')
-        #x_max = self.getOption('xmax')
-        #y_min = self.getOption('ymin')
-        #y_max = self.getOption('ymax')
-        c = [self.getOption(n) for n in names]
+        #x_min = self.getParam('xmin')
+        #x_max = self.getParam('xmax')
+        #y_min = self.getParam('ymin')
+        #y_max = self.getParam('ymax')
+        c = [self.getParam(n) for n in names]
         c[index] += increment
 
         xmin = round(c[0], 3) if (c[0] >= 0 and c[0] < c[2]) else xmin
@@ -203,14 +203,14 @@ class Viewport(utils.KeyBindingMixin, base.ChiggerAlgorithm):
         ymin = round(c[1], 3) if (c[1] >= 0 and c[1] < c[3]) else ymin
         ymax = round(c[3], 3) if (c[3] <= 1 and c[1] < c[3]) else ymax
 
-        self.setOptions(xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)
+        self.setParams(xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)
         self.updateInformation()
         self.printOption(['xmin', 'ymin', 'ymin', 'ymax'][index])
 
 class Background(Viewport):
     @classmethod
-    def validOptions(cls):
-        opt = Viewport.validOptions()
+    def validParams(cls):
+        opt = Viewport.validParams()
         opt.set('name', '__ChiggerWindowBackground__')
         opt.set('highlight', False)
         opt.set('interactive', True)

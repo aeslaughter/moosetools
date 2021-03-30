@@ -22,9 +22,9 @@ class MainWindowObserver(ChiggerObserver, utils.KeyBindingMixin):
     RE = re.compile(r"(?P<key>[^\s=]+)=(?P<value>.*?)(?=(?:,\s[^\s=]+=|\Z)|\)\Z)")
 
     @staticmethod
-    def validOptions():
-        opt = ChiggerObserver.validOptions()
-        opt += utils.KeyBindingMixin.validOptions()
+    def validParams():
+        opt = ChiggerObserver.validParams()
+        opt += utils.KeyBindingMixin.validParams()
         return opt
 
     @staticmethod
@@ -40,10 +40,10 @@ class MainWindowObserver(ChiggerObserver, utils.KeyBindingMixin):
         bindings.add('s', MainWindowObserver.onNextSource, shift=True, args=(-1,),
                      desc="Select the previous source in the current viewport.")
 
-        bindings.add('p', MainWindowObserver.onPrintOptions,
+        bindings.add('p', MainWindowObserver.onPrintParams,
                      desc="Display the available key, value options for the active source or viewport.")
-        bindings.add('p', MainWindowObserver.onPrintSetOptions, shift=True,
-                     desc="Display the non-default key, value options as a 'setOptions' method call for the active source of viewport.")
+        bindings.add('p', MainWindowObserver.onPrintSetParams, shift=True,
+                     desc="Display the non-default key, value options as a 'setParams' method call for the active source of viewport.")
 
         bindings.add('c', MainWindowObserver.onPrintCamera,
                      desc="Display the camera settings for the current viewport/object.")
@@ -61,23 +61,23 @@ class MainWindowObserver(ChiggerObserver, utils.KeyBindingMixin):
 
         # Disable interaction by default, but honor user specified interaction
         for viewport in self.getViewports():
-            v_i = viewport.getOption('interactive') if viewport._options.isSetByUser('interactive') else False
-            v_h = viewport.getOption('highlight') if viewport._options.isSetByUser('highlight') else v_i
-            viewport.setOptions(highlight=v_h, interactive=v_i)
+            v_i = viewport.getParam('interactive') if viewport.options().isSetByUser('interactive') else False
+            v_h = viewport.getParam('highlight') if viewport.parameters().isSetByUser('highlight') else v_i
+            viewport.setParams(highlight=v_h, interactive=v_i)
 
             for source in viewport.sources():
-                s_i = source.getOption('interactive') if source._options.isSetByUser('interactive') else False
-                s_h = source.getOption('highlight') if source._options.isSetByUser('highlight') else s_i
-                source.setOptions(highlight=s_h, interactive=s_i)
+                s_i = source.getParam('interactive') if source.parameters().isSetByUser('interactive') else False
+                s_h = source.getParam('highlight') if source.parameters().isSetByUser('highlight') else s_i
+                source.setParams(highlight=s_h, interactive=s_i)
 
     def getViewports(self):
         """Complete list of available Viewport objects"""
-        return [viewport for viewport in self._window.viewports() if viewport.getOption('layer') > 0]
+        return [viewport for viewport in self._window.viewports() if viewport.getParam('layer') > 0]
 
     def getActiveViewport(self):
         """Current active (highlighted) Viewport object"""
         for viewport in self.getViewports():
-            if viewport.getOption('highlight'):
+            if viewport.getParam('highlight'):
                 return viewport
         return None
 
@@ -85,7 +85,7 @@ class MainWindowObserver(ChiggerObserver, utils.KeyBindingMixin):
         """Activate the supplied viewport and disable all others"""
         for vp in self.getViewports():
             active = viewport is vp
-            vp.setOptions(interactive=False, highlight=active)
+            vp.setParams(interactive=False, highlight=active)
             vp.updateInformation()
 
     def onNextViewport(self, increment):
@@ -109,25 +109,25 @@ class MainWindowObserver(ChiggerObserver, utils.KeyBindingMixin):
 
     def getSources(self):
         """Complete list of available ChiggerSourceBase objects"""
-        return [source for viewport in self.getViewports() for source in viewport.sources() if source.getOption('pickable')]
+        return [source for viewport in self.getViewports() for source in viewport.sources() if source.getParam('pickable')]
 
     def getActiveSource(self):
         """Current active ChiggerSourceBase object"""
         for source in self.getSources():
-            if source.getOption('interactive'):
+            if source.getParam('interactive'):
                 return source
         return None
 
     def setActiveSource(self, source):
         for s in self.getSources():
             active = s is source
-            s.setOptions(highlight=active, interactive=active)
+            s.setParams(highlight=active, interactive=active)
             s._viewport.updateInformation()
             s.updateInformation()
 
         src = self.getActiveSource()
         if src is not None:
-            src._viewport.setOptions(interactive=True)
+            src._viewport.setParams(interactive=True)
             src._viewport.updateInformation()
 
     def onNextSource(self, increment):
@@ -157,12 +157,12 @@ class MainWindowObserver(ChiggerObserver, utils.KeyBindingMixin):
         self.setActiveViewport(None)
         self.setActiveSource(None)
 
-    def onPrintOptions(self):
+    def onPrintParams(self):
         """Print a list of all available options for active objects."""
         def printHelper(obj):
             if obj is not None:
-                print(mooseutils.colorText('\n{} Available Options:'.format(obj.name()), 'LIGHT_CYAN'))
-                print(obj._options)
+                print(mooseutils.colorText('\n{} Available Params:'.format(obj.name()), 'LIGHT_CYAN'))
+                print(obj.parameters())
 
         obj = self.getActiveSource() or self.getActiveViewport()
         if obj is not None:
@@ -170,14 +170,14 @@ class MainWindowObserver(ChiggerObserver, utils.KeyBindingMixin):
         else:
             self.warning("No active viewport or source, so there is nothing to print (press 'h' for help).")
 
-    def onPrintSetOptions(self, *args):
-        """Print python code for the 'setOptions' method for active objects"""
+    def onPrintSetParams(self, *args):
+        """Print python code for the 'setParams' method for active objects"""
         def printHelper(obj):
             if obj is not None:
-                output, sub_output = obj._options.toScript()
-                print('\n{} -> setOptions({})'.format(obj.name(), ', '.join(output)))
+                output, sub_output = obj.parameters().toScript()
+                print('\n{} -> setParams({})'.format(obj.name(), ', '.join(output)))
                 for key, value in sub_output.items():
-                    print('{} -> setOptions({}, {})'.format(obj.name(), key, ', '.join(repr(value))))
+                    print('{} -> setParams({}, {})'.format(obj.name(), key, ', '.join(repr(value))))
 
         obj = self.getActiveSource() or self.getActiveViewport()
         if obj is not None:

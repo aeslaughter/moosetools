@@ -22,8 +22,8 @@ class ExodusColorBar(misc.ColorBar):
         result1: (Optional) The ExodusResult for the secondary axis.
     """
     @staticmethod
-    def validOptions():
-        opt = misc.ColorBar.validOptions()
+    def validParams():
+        opt = misc.ColorBar.validParams()
         opt.set('viewport', None)
         opt.set('layer', None)
         return opt
@@ -44,22 +44,22 @@ class ExodusColorBar(misc.ColorBar):
             raise mooseutils.MooseException("The supplied index must be 0 or 1.")
         return self._results[index]
 
-    def setOptions(self, *args, **kwargs):
+    def setParams(self, *args, **kwargs):
         """
         Update the supplied options and apply the colormap options from the ExodusResult.
         """
         if not args:
-            opts = base.ColorMap.validOptions()
+            opts = base.ColorMap.validParams()
             for result in self._results:
                 for key in opts.keys():
-                    kwargs[key] = result.getOption(key)
+                    kwargs[key] = result.getParam(key)
 
-            if self.getOption('viewport') is None:
-                self.setOption('viewport', self._results[0].getOption('viewport'))
-            if self.getOption('layer') is None:
-                self.setOption('layer', self._results[0].getOption('layer'))
+            if self.getParam('viewport') is None:
+                self.setParam('viewport', self._results[0].getParam('viewport'))
+            if self.getParam('layer') is None:
+                self.setParam('layer', self._results[0].getParam('layer'))
 
-        super(ExodusColorBar, self).setOptions(*args, **kwargs)
+        super(ExodusColorBar, self).setParams(*args, **kwargs)
 
     def update(self, **kwargs):
         """
@@ -67,24 +67,24 @@ class ExodusColorBar(misc.ColorBar):
         colorbar.
         """
         n = len(self._results)
-        primary = self.getOption('primary')
-        secondary = self.getOption('secondary')
+        primary = self.getParam('primary')
+        secondary = self.getParam('secondary')
 
-        def set_axis_options_helper(ax, result): #pylint: disable=invalid-name
-            """Helper for setting axis options."""
+        def set_axis_params_helper(ax, result): #pylint: disable=invalid-name
+            """Helper for setting axis params."""
             ax.set('lim', result[0].getVTKMapper().GetScalarRange())
             if ax.get('title') is None:
                 ax.set('title', result[0].getVTKMapper().GetArrayName())
 
         # Primary
         if n > 0:
-            set_axis_options_helper(primary, self._results[0])
+            set_axis_params_helper(primary, self._results[0])
 
         # Secondary
         if n == 2:
-            set_axis_options_helper(secondary, self._results[1])
+            set_axis_params_helper(secondary, self._results[1])
             secondary.set('visible', True)
 
-        self.setOption('primary', primary)
-        self.setOption('secondary', secondary)
+        self.setParam('primary', primary)
+        self.setParam('secondary', secondary)
         super(ExodusColorBar, self).update(**kwargs)

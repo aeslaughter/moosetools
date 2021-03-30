@@ -24,8 +24,8 @@ class TestObserver(ChiggerObserver):
     """
 
     @staticmethod
-    def validOptions():
-        opt = ChiggerObserver.validOptions()
+    def validParams():
+        opt = ChiggerObserver.validParams()
         opt.add('terminate', vtype=bool, default=True, doc="Exit after rendering.")
         opt.add('duration', vtype=(int, float), default=0.5, doc="Duration to wait in seconds for event trigger.")
         opt.add('averaging', vtype=bool, default=False, doc="Control default setting for 'averaging' of image compare.")
@@ -36,7 +36,7 @@ class TestObserver(ChiggerObserver):
     def __init__(self, *args, **kwargs):
         ChiggerObserver.__init__(self, *args, **kwargs)
 
-        self._window.getVTKInteractor().CreateOneShotTimer(int(self.getOption('duration'))*1000)
+        self._window.getVTKInteractor().CreateOneShotTimer(int(self.getParam('duration'))*1000)
         self.addObserver(vtk.vtkCommand.TimerEvent, self._onEvent)
         self._actions = list()
         self._retcode = 0
@@ -44,8 +44,8 @@ class TestObserver(ChiggerObserver):
     def status(self):
         return self._retcode
 
-    def setObjectOptions(self, obj, *args, **kwargs):
-        self.assertFunction(lambda: self._setObjectOptions(obj, *args, **kwargs))
+    def setObjectParams(self, obj, *args, **kwargs):
+        self.assertFunction(lambda: self._setObjectParams(obj, *args, **kwargs))
 
     def pressKey(self, key, shift=False):
         """
@@ -106,9 +106,9 @@ class TestObserver(ChiggerObserver):
         """
         see assertImage
         """
-        if threshold is None: threshold = self.getOption('threshold')
-        if averaging is None: averaging = self.getOption('averaging')
-        if shift is None: shift = self.getOption('shift')
+        if threshold is None: threshold = self.getParam('threshold')
+        if averaging is None: averaging = self.getParam('averaging')
+        if shift is None: shift = self.getParam('shift')
 
         # Write the current window to file
         self._window.write(filename=filename)
@@ -170,7 +170,7 @@ class TestObserver(ChiggerObserver):
         with mock.patch('chigger.ChiggerFormatter.format') as log:
             log.side_effect = func
             if obj is not None:
-                self._setObjectOptions(obj, *args, **kwargs)
+                self._setObjectParams(obj, *args, **kwargs)
             if key is not None:
                 self._pressKey(key, shift=shift)
 
@@ -190,7 +190,7 @@ class TestObserver(ChiggerObserver):
         with mock.patch('chigger.ChiggerFormatter.format') as log:
             #log.side_effect = func
             if obj is not None:
-                self._setObjectOptions(obj, **kwargs)
+                self._setObjectParams(obj, **kwargs)
             if key is not None:
                 self._pressKey(key, shift=shift)
 
@@ -208,7 +208,7 @@ class TestObserver(ChiggerObserver):
     def _assertInConsole(self, text, obj=None, key=None, shift=False, **kwargs):
         with mock.patch("sys.stdout", new=io.StringIO()) as out:
             if obj is not None:
-                self._setObjectOptions(obj, **kwargs)
+                self._setObjectParams(obj, **kwargs)
             if key is not None:
                 self._pressKey(key, shift=shift)
 
@@ -225,7 +225,7 @@ class TestObserver(ChiggerObserver):
     def _assertNotInConsole(self, text, obj=None, key=None, shift=False):
         with mock.patch("sys.stdout", new=io.StringIO()) as out:
             if obj is not None:
-                self._setObjectOptions(obj, **kwargs)
+                self._setObjectParams(obj, **kwargs)
             if key is not None:
                 self._pressKey(key, shift=shift)
 
@@ -248,8 +248,9 @@ class TestObserver(ChiggerObserver):
         vtkinteractor.SetShiftKey(False)
         return 0, None
 
-    def _setObjectOptions(self, obj, *args, **kwargs):
-        obj.setOptions(*args, **kwargs)
+    def _setObjectParams(self, obj, *args, **kwargs):
+        print(self._setObjectParams)
+        obj.setParams(*args, **kwargs)
         self._window.render()
         self._window.resetClippingRange()
         self._window.resetCamera()
@@ -264,8 +265,8 @@ class TestObserver(ChiggerObserver):
                 if out[0]:
                     msg = '{}:{}\n{}'.format(stack[-2].filename, stack[-2].lineno, out[1])
                     self.error(msg)
-                    self.setOption('terminate', True)
+                    self.setParam('terminate', True)
                     break
 
-        if self.getOption('terminate'):
+        if self.getParam('terminate'):
             self.terminate()

@@ -15,16 +15,16 @@ import subprocess
 import numpy as np
 import vtk
 import mooseutils
-from . import AxisOptions
-from . import LegendOptions
+from . import AxisParams
+from . import LegendParams
 from .KeyBindingMixin import KeyBinding, KeyBindingMixin
 
-from .Option import Option
-from .Options import Options
+from .ChiggerParameter import ChiggerParameter
+from .ChiggerInputParameters import ChiggerInputParameters
 from .AutoColor import Color, AutoColor, auto_adjust_color
-from . import ColorMapOptions
-from . import TextOptions
-from . import BackgroundOptions
+from . import ColorMapParams
+from . import TextParams
+from . import BackgroundParams
 
 from .utils import get_current_window
 from .utils import get_current_viewport

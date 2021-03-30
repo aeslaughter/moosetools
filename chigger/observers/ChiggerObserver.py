@@ -20,8 +20,8 @@ class ChiggerObserver(base.ChiggerObject):
     This object is a base class and not intended for general use, see TimerObserver as an example.
     """
     @staticmethod
-    def validOptions():
-        opt = base.ChiggerObject.validOptions()
+    def validParams():
+        opt = base.ChiggerObject.validParams()
         opt.add('window', default=utils.get_current_window(), required=True,
                 doc='The chigger.Window object that this Viewport is to be associated')
         return opt
@@ -33,7 +33,7 @@ class ChiggerObserver(base.ChiggerObject):
         # can tell this is due to a cyclic reference between the observers added to the VTK
         # interactor objects. Using a weak reference with the self._window property allows this
         # class to operate like desired.
-        self.__window_weakref = weakref.ref(self.getOption('window'))
+        self.__window_weakref = weakref.ref(self.getParam('window'))
 
 
         self.__observer_tags = list()

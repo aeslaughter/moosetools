@@ -19,8 +19,8 @@ class Cube(GeometricSource):
     VTKSOURCETYPE = vtk.vtkCubeSource
 
     @staticmethod
-    def validOptions():
-        opt = GeometricSource.validOptions()
+    def validParams():
+        opt = GeometricSource.validParams()
         opt.add('color', vtype=utils.AutoColor, doc="The color of the cube")
         opt.add('xmin', default=0, vtype=(int, float),
                 doc="Minimum x-value in 3D renderer coordinates.")
@@ -41,7 +41,7 @@ class Cube(GeometricSource):
         Set the options for this cube. (public)
         """
         GeometricSource._onRequestInformation(self, *args)
-        self.assignOption('color', self._vtkactor.GetProperty().SetColor)
-        self._vtksource.SetBounds(self.getOption('xmin'), self.getOption('xmax'),
-                                  self.getOption('ymin'), self.getOption('ymax'),
-                                  self.getOption('zmin'), self.getOption('zmax'))
+        self.assignParam('color', self._vtkactor.GetProperty().SetColor)
+        self._vtksource.SetBounds(self.getParam('xmin'), self.getParam('xmax'),
+                                  self.getParam('ymin'), self.getParam('ymax'),
+                                  self.getParam('zmin'), self.getParam('zmax'))

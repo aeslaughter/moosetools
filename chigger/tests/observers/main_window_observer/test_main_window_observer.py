@@ -106,8 +106,8 @@ def main():
     test.assertImage('active_source1.png')
 
     # Printing of options
-    test.assertInConsole('Rectangle Available Options:', key='p')
-    test.assertInConsole('Rectangle -> setOptions', key='p', shift=True)
+    test.assertInConsole('Rectangle Available Params:', key='p')
+    test.assertInConsole('Rectangle -> setParams', key='p', shift=True)
 
     # Printing of camera
     test.assertInConsole('camera = vtk.vtkCamera()', key='c')

@@ -1,8 +1,8 @@
-from .Options import Options
+from .ChiggerInputParameters import ChiggerInputParameters
 
-def validOptions():
+def validParams():
     """Returns options for edge properties for vtkActor objects."""
-    opt = Options()
+    opt = ChiggerInputParameters()
 
     opt.add('orientation', vtype=(int, float), size=3, doc="The orientation of the object.")
     opt.add('rotation', default=(0., 0., 0.), vtype=(int, float), size=3,
@@ -13,7 +13,7 @@ def validOptions():
     opt.add('size', default=1, vtype=int, doc="The point size, if None then no points are shown.")
     return opt
 
-def applyOptions(vtkactor, opt):
+def applyParams(vtkactor, opt):
 
     """
     if opt.isValid('orientation'):

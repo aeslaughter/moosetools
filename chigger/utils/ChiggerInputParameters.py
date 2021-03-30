@@ -11,14 +11,14 @@ from collections import OrderedDict
 import copy
 import mooseutils
 import parameters
-from .Option import Option
+from .ChiggerParameter import ChiggerParameter
 from .AutoColor import Color
 
-class Options(parameters.InputParameters):
+class ChiggerInputParameters(parameters.InputParameters):
     """
     A warehouse for creating and storing options
     """
-    __PARAM_TYPE__ = Option
+    __PARAM_TYPE__ = ChiggerParameter
 
     def modified(self):
         """
@@ -41,12 +41,11 @@ class Options(parameters.InputParameters):
         """
         Return a dict() from the supplied keys
         """
-        keys = keys or self.__options.keys()
-        return {k:self.get(k) for k in keys}
+        return {k:self.get(k) for k,v in self.items()}
 
     def toScript(self, **kwargs):
         """
-        Takes an Options object and returns a string for building python scripts.
+        Takes an Params object and returns a string for building python scripts.
 
         Inputs:
             kwargs: Key, value pairs provided will replace values in options with the string given
@@ -58,7 +57,7 @@ class Options(parameters.InputParameters):
         for key in self.keys():
             opt = self.get(key)
 
-            if isinstance(opt, Options):
+            if isinstance(opt, Params):
                 items, _ = opt.toScript()
                 if items:
                     sub_output[key] = items
@@ -72,18 +71,18 @@ class Options(parameters.InputParameters):
 
         return output, sub_output
 
-    def getNonDefaultOptions(self, **kwargs):
+    def getNonDefaultParams(self, **kwargs):
         output = []
         sub_output = dict()
         for key in self.keys():
             opt = self.get(key)
 
-            if isinstance(opt, Options):
-                items, _ = opt.getNonDefaultOptions()
+            if isinstance(opt, ChiggerInputParameters):
+                items, _ = opt.getNonDefaultParams()
                 if items:
                     sub_output[key] = items
 
-            elif not self.isDefault(key):
+            elif not self._parameters.isDefault(key):
                 if key in kwargs:
                     r = kwargs[key]
                 else:

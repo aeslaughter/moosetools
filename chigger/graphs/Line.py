@@ -18,8 +18,8 @@ class Line(base.ChiggerObject):
     """
 
     @staticmethod
-    def validOptions():
-        opt = base.ChiggerObject.validOptions()
+    def validParams():
+        opt = base.ChiggerObject.validParams()
         opt.add('x', vtype=list, doc="The x-axis data.")
         opt.add('y', vtype=list, doc="The y-axis data.")
         opt.add('label', vtype=str, doc="The plot label (name appearing in legend).")
@@ -64,21 +64,21 @@ class Line(base.ChiggerObject):
 
         # Set x,y data
         if x_data:
-            self.setOption('x', x_data)
+            self.setParam('x', x_data)
         if y_data:
-            self.setOption('y', y_data)
+            self.setParam('y', y_data)
 
-    def setOptions(self, *args, **kwargs):
+    def setParams(self, *args, **kwargs):
         """
         Update line objects settings.
         """
-        super(Line, self).setOptions(*args, **kwargs)
+        super(Line, self).setParams(*args, **kwargs)
 
-        tracer = self.getOption('tracer')
+        tracer = self.getParam('tracer')
         if tracer and not self.isValid('xtracer'):
-            self.setOption('xtracer', True)
+            self.setParam('xtracer', True)
         if tracer and not self.isValid('ytracer'):
-            self.setOption('ytracer', True)
+            self.setParam('ytracer', True)
 
     def initialize(self):
         """
@@ -87,7 +87,7 @@ class Line(base.ChiggerObject):
         see Graph::Update
         """
         # Create the vtk line or points object
-        style = self.getOption('style')
+        style = self.getParam('style')
         if style == '-' and not isinstance(self._vtkplot, vtk.vtkPlotLine):
             self._vtkplot = vtk.vtkPlotLine()
             self._vtkplot.SetInputData(self._vtktable, 0, 1)
@@ -97,14 +97,14 @@ class Line(base.ChiggerObject):
             self._vtkplot.SetInputData(self._vtktable, 0, 1)
 
         # Create tracer lines(s)
-        if self.getOption('xtracer'):
+        if self.getParam('xtracer'):
             if self._xtracer is None:
-                self._xtracer = Line(append=False, width=0.1, color=self.getOption('color'))
+                self._xtracer = Line(append=False, width=0.1, color=self.getParam('color'))
                 self._xtracer.initialize()
 
-        if self.getOption('ytracer'):
+        if self.getParam('ytracer'):
             if self._ytracer is None:
-                self._ytracer = Line(append=False, width=0.1, color=self.getOption('color'))
+                self._ytracer = Line(append=False, width=0.1, color=self.getParam('color'))
                 self._ytracer.initialize()
 
     def getVTKPlot(self):
@@ -120,14 +120,14 @@ class Line(base.ChiggerObject):
         super(Line, self).update(**kwargs)
 
         # Remove x,y data
-        if not self.getOption('append'):
+        if not self.getParam('append'):
             self._vtktable.SetNumberOfRows(0)
 
         # Get the x,y data and reset to None so that data doesn't append over and over
-        x = self.getOption('x')
-        y = self.getOption('y')
-        self._options.set('x', None)
-        self._options.set('y', None)
+        x = self.getParam('x')
+        y = self.getParam('y')
+        self._parameters.set('x', None)
+        self._parameters.set('y', None)
         if (x and y) and (len(x) == len(y)):
             for i in range(len(x)): #pylint: disable=consider-using-enumerate
                 array = vtk.vtkVariantArray()
@@ -142,15 +142,15 @@ class Line(base.ChiggerObject):
 
         # Apply the line/point settings
         if self.isValid('color'):
-            self._vtkplot.SetColor(*self.getOption('color'))
+            self._vtkplot.SetColor(*self.getParam('color'))
 
         if self.isValid('width'):
-            self._vtkplot.SetWidth(self.getOption('width'))
+            self._vtkplot.SetWidth(self.getParam('width'))
 
         if self.isValid('label'):
-            self._vtkplot.SetLabel(self.getOption('label'))
+            self._vtkplot.SetLabel(self.getParam('label'))
 
-        vtk_marker = getattr(vtk.vtkPlotLine, self.getOption('marker').upper())
+        vtk_marker = getattr(vtk.vtkPlotLine, self.getParam('marker').upper())
         self._vtkplot.SetMarkerStyle(vtk_marker)
 
         # Label

@@ -57,57 +57,57 @@ class TestChiggerObjectBase(unittest.TestCase):
 
     def testIsOptionValid(self):
         obj = chigger.base.ChiggerObject()
-        self.assertFalse(obj.isOptionValid('name'))
-        obj.setOption('name', 'foo')
-        self.assertTrue(obj.isOptionValid('name'))
+        self.assertFalse(obj.isParamValid('name'))
+        obj.setParam('name', 'foo')
+        self.assertTrue(obj.isParamValid('name'))
 
     def testIsOptionValid(self):
         obj = chigger.base.ChiggerObject()
-        obj._options.add('foo', default='bar')
+        obj.parameters().add('foo', default='bar')
 
-        self.assertTrue(obj.isOptionDefault('foo'))
-        obj.setOption('foo', 'not default')
-        self.assertFalse(obj.isOptionDefault('foo'))
+        self.assertTrue(obj.isParamDefault('foo'))
+        obj.setParam('foo', 'not default')
+        self.assertFalse(obj.isParamDefault('foo'))
 
     def testGetOption(self):
         obj = chigger.base.ChiggerObject(name='name')
-        self.assertEqual(obj.getOption('name'), 'name')
+        self.assertEqual(obj.getParam('name'), 'name')
 
         with self.assertLogs(level='WARNING') as log:
-            obj.getOption('wrong')
+            obj.getParam('wrong')
         self.assertEqual(len(log.output), 1)
         self.assertIn("The parameter 'wrong' does not exist", log.output[0])
 
     def testSetOption(self):
         obj = chigger.base.ChiggerObject()
-        obj.setOption('name', 'this')
-        self.assertEqual(obj.getOption('name'), 'this')
+        obj.setParam('name', 'this')
+        self.assertEqual(obj.getParam('name'), 'this')
 
         with self.assertLogs(level='WARNING') as log:
-            obj.setOption('wrong', 42)
+            obj.setParam('wrong', 42)
         self.assertEqual(len(log.output), 1)
         self.assertIn("The parameter 'wrong' does not exist", log.output[0])
 
-    def testSetOptions(self):
+    def testSetParams(self):
         obj = chigger.base.ChiggerObject()
-        obj.setOptions(name='this')
-        self.assertEqual(obj.getOption('name'), 'this')
+        obj.setParams(name='this')
+        self.assertEqual(obj.getParam('name'), 'this')
 
         with self.assertLogs(level='WARNING') as log:
-            obj.setOptions(wrong=42)
+            obj.setParams(wrong=42)
         self.assertEqual(len(log.output), 1)
         self.assertIn("The parameter 'wrong' does not exist", log.output[0])
 
-    def assignOption(self):
+    def assignParam(self):
         name = None
         def func(value):
             name = value
         obj = chigger.base.ChiggerObject(name='andrew')
-        obj.assignOption('andrew', func)
+        obj.assignParam('andrew', func)
         self.assertEqual(name, 'andrew')
 
         with self.assertLogs(level='WARNING') as log:
-            obj.assignOption('wrong', func)
+            obj.assignParam('wrong', func)
         self.assertEqual(len(log.output), 1)
         self.assertIn("The parameter 'wrong' does not exist", log.output[0])
 
@@ -122,23 +122,23 @@ class TestChiggerObject(unittest.TestCase):
         obj = chigger.base.ChiggerObject()
         t0 = obj._ChiggerObject__modified_time.GetMTime()
 
-        obj.setOption('name', 'andrew')
+        obj.setParam('name', 'andrew')
         t1 = obj._ChiggerObject__modified_time.GetMTime()
         self.assertTrue(t1 > t0)
 
-        obj.setOption('name', 'andrew')
+        obj.setParam('name', 'andrew')
         t2 = obj._ChiggerObject__modified_time.GetMTime()
         self.assertEqual(t1, t2)
 
-    def testSetOptions(self):
+    def testSetParams(self):
         obj = chigger.base.ChiggerObject()
         t0 = obj._ChiggerObject__modified_time.GetMTime()
 
-        obj.setOptions(name='andrew')
+        obj.setParams(name='andrew')
         t1 = obj._ChiggerObject__modified_time.GetMTime()
         self.assertTrue(t1 > t0)
 
-        obj.setOptions(name='andrew')
+        obj.setParams(name='andrew')
         t2 = obj._ChiggerObject__modified_time.GetMTime()
         self.assertEqual(t1, t2)
 

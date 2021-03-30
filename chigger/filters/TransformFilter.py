@@ -17,8 +17,8 @@ class Transform(ChiggerFilter):
 
 
     @staticmethod
-    def validOptions():
-        opt = ChiggerFilterBase.validOptions()
+    def validParams():
+        opt = ChiggerFilterBase.validParams()
         opt.add('scale', default=(1, 1, 1), vtype=(int, float), size=3,
                 doc="The scale to apply in the x, y, z coordinate dimensions.")
         opt.add('translate', default=(0, 0, 0), vtype=(int, float), size=3,
@@ -37,11 +37,11 @@ class Transform(ChiggerFilter):
         self.OutputType = 'vtkPolyData'
 
 
-    def applyOptions(self, **kwargs):
+    def applyParams(self, **kwargs):
         """
         Computes the contour levels for the vtkContourFilter.
         """
-        Transform.applyOptions(self)
+        Transform.applyParams(self)
 
         #if self.isValid('scale'):
         #    inverse = self.__transform.GetInverse().GetScale()
@@ -53,8 +53,8 @@ class Transform(ChiggerFilter):
         #    translate = self.applyOption('translate')
         #    self.__transform.Translate(translate)
 
-        if self.isOptionValid('rotate'):
-            rot = self.getOption('rotate')
+        if self.isParamValid('rotate'):
+            rot = self.getParam('rotate')
             self._vtkfilter.RotateX(rot[0])
             self._vtkfilter.RotateY(rot[1])
             self._vtkfilter.RotateZ(rot[2])

@@ -31,7 +31,7 @@ class TestLogo(chigger.base.ChiggerTestCase):
         self.assertImage('chigger_white.png')
 
     def testChiggerBlack(self):
-        self._window.setOptions('background', color=chigger.utils.Color(1,1,1))
+        self._window.setParams('background', color=chigger.utils.Color(1,1,1))
         chigger.annotations.Logo(logo='chigger', **self._logo_args)
         self.assertImage('chigger_black.png')
 
@@ -40,7 +40,7 @@ class TestLogo(chigger.base.ChiggerTestCase):
         self.assertImage('inl_white.png')
 
     def testInlBlack(self):
-        self._window.setOptions('background', color=chigger.utils.Color(1,1,1))
+        self._window.setParams('background', color=chigger.utils.Color(1,1,1))
         chigger.annotations.Logo(logo='inl', **self._logo_args)
         self.assertImage('inl_black.png')
 

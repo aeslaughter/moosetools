@@ -7,13 +7,21 @@
 #* Licensed under LGPL 2.1, please see LICENSE for details
 #* https://www.gnu.org/licenses/lgpl-2.1.html
 from .AutoColor import Color, AutoColor
-from .Options import Options
+from .ChiggerInputParameters import ChiggerInputParameters
 
-def validOptions():
+def validParams():
     """Returns options for vtkTextProperty."""
-    opt = Options()
+    opt = ChiggerInputParameters()
+    opt.add('rotate', default=0., vtype=(int, float),
+            verify=(lambda v: v>=0 and v<360, "The supplied value must in range [0,360)"),
+            doc="The text rotation in degrees.")
+    opt.add('halign', default='left', vtype=str, allow=('left', 'center', 'right'),
+            doc="Set the font justification.")
+    opt.add('valign', default='bottom', allow=('bottom', 'center', 'top'),
+            doc="The vertical text justification.")
 
-    font = Options()
+    # font_...
+    font = ChiggerInputParameters()
     font.add('color', vtype=(AutoColor, Color), doc="The text color.")
     font.add('opacity', default=1., vtype=(int, float),
             verify=(lambda v: v>=0 and v<=1, "The supplied value must be in range [0,1]"),
@@ -25,39 +33,33 @@ def validOptions():
     font.add('bold', default=False, vtype=bool, doc="Use bold style text")
     font.add('family', default='arial', vtype=str, allow=('arial', 'courier', 'times'),
              doc="The font family")
-    opt.add('font', default=font, vtype=Options, doc="Font options")
+    opt.add('font', default=font, vtype=ChiggerInputParameters, doc="Font options")
 
-    frame = Options()
+    # frame_...
+    frame = ChiggerInputParameters()
     frame.add('on', vtype=bool, default=False, doc="Enable the text frame")
     frame.add('color', vtype=(int, float), size=3, doc="The color of the frame around text, defaults to text color")
     frame.add('width', default=1, vtype=int,
               doc="The width of the frame around text")
-    opt.add('frame', default=frame, vtype=Options, doc="Frame options")
+    opt.add('frame', default=frame, vtype=ChiggerInputParameters, doc="Frame options")
 
-    bg = Options()
+    # background_...
+    bg = ChiggerInputParameters()
     bg.add('color', vtype=Color, doc="The color of the text background.")
     bg.add('opacity', default=1., vtype=(int, float),
             verify=(lambda v: v>0 and v<=1, "The supplied value must be in range (0,1]"),
             doc="The opacity of the text background.")
-    opt.add('background', default=bg, vtype=Options, doc="Background options")
+    opt.add('background', default=bg, vtype=ChiggerInputParameters, doc="Background options")
 
-    opt.add('rotate', default=0., vtype=(int, float),
-            verify=(lambda v: v>=0 and v<360, "The supplied value must in range [0,360)"),
-            doc="The text rotation in degrees.")
-
-    opt.add('halign', default='left', vtype=str, allow=('left', 'center', 'right'),
-            doc="Set the font justification.")
-    opt.add('valign', default='bottom', allow=('bottom', 'center', 'top'),
-            doc="The vertical text justification.")
     return opt
 
-def applyOptions(actor, viewport, tprop, opt):
+def applyParams(actor, viewport, tprop, opt):
     """
     Applies font options to vtkTextProperty object.
 
     Inputs:
         tprop: A vtk.vtkTextProperty object for applying options.
-        options: The Options object containing the settings to apply.
+        options: The Params object containing the settings to apply.
     """
     # Do nothing if text does not exist
     if not actor.GetInput():

@@ -9,9 +9,9 @@ class Rectangle(GeometricSource2D):
     PRECISION = 5
 
     @staticmethod
-    def validOptions():
-        opt = GeometricSource2D.validOptions()
-        opt += utils.ColorMapOptions.validOptions()
+    def validParams():
+        opt = GeometricSource2D.validParams()
+        opt += utils.ColorMapParams.validParams()
         opt.setDefault('cmap', None)
         opt.add('color', vtype=utils.AutoColor, doc="The color of the rectangle")
 
@@ -46,8 +46,8 @@ class Rectangle(GeometricSource2D):
         GeometricSource2D.__init__(self, *args, **kwargs)
 
     def _getBounds(self):
-        return (self.getOption('xmin'), self.getOption('xmax'),
-                self.getOption('ymin'), self.getOption('ymax'))
+        return (self.getParam('xmin'), self.getParam('xmax'),
+                self.getParam('ymin'), self.getParam('ymax'))
 
     def _onRequestInformation(self, *args):
         """
@@ -55,11 +55,11 @@ class Rectangle(GeometricSource2D):
         """
         GeometricSource2D._onRequestInformation(self, *args)
 
-        p0 = (self.getOption('xmin'), self.getOption('ymin'), 0)
-        p1 = (p0[0], self.getOption('ymax'), 0)
-        p2 = (self.getOption('xmax'), p0[1], 0)
+        p0 = (self.getParam('xmin'), self.getParam('ymin'), 0)
+        p1 = (p0[0], self.getParam('ymax'), 0)
+        p2 = (self.getParam('xmax'), p0[1], 0)
 
-        angle = self.getOption('rotate')
+        angle = self.getParam('rotate')
         if angle > 0:
             center = ((p1[0] + p2[0])/2., (p1[1] + p2[1])/2.)
             p0 = utils.rotate_point(p0, center, angle)
@@ -70,18 +70,18 @@ class Rectangle(GeometricSource2D):
         self._vtksource.SetPoint1(p1)
         self._vtksource.SetPoint2(p2)
 
-        if self.isOptionValid('resolution'):
-            self._vtksource.SetResolution(*self.getOption('resolution'))
+        if self.isParamValid('resolution'):
+            self._vtksource.SetResolution(*self.getParam('resolution'))
 
-        pdata = self.getOption('point_data')
+        pdata = self.getParam('point_data')
         if pdata is not None:
             self._vtksource.Update()
             self._vtksource.GetOutput().GetPointData().SetScalars(pdata)
             self._vtkmapper.SetScalarRange(pdata.GetRange())
 
-        if self.isOptionValid('cmap'):
-            cmap = utils.ColorMapOptions.applyOptions(self.getOption('cmap'))
+        if self.isParamValid('cmap'):
+            cmap = utils.ColorMapParams.applyParams(self.getParam('cmap'))
             self._vtkmapper.SetLookupTable(cmap)
             self._vtkmapper.SetUseLookupTableScalarRange(True)
-        elif self.isOptionValid('color'):
+        elif self.isParamValid('color'):
             self.assign('color', self._vtkactor.GetProperty().SetColor)

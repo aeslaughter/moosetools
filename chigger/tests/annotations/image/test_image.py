@@ -18,31 +18,31 @@ class TestImage(chigger.base.ChiggerTestCase):
         self.assertImage('default.png')
 
     def testWidth(self):
-        self.setObjectOptions(self._moose, width=1)
+        self.setObjectParams(self._moose, width=1)
         self.assertImage('width.png')
 
     def testHeight(self):
-        self.setObjectOptions(self._moose, height=1)
+        self.setObjectParams(self._moose, height=1)
         self.assertImage('height.png')
 
     def testHeightAndWidth(self):
-        self.setObjectOptions(self._moose, width=1, height=1)
+        self.setObjectParams(self._moose, width=1, height=1)
         self.assertImage('height_and_width.png')
 
     def testPosition(self):
-        self.setObjectOptions(self._moose, position=(0.5,0.5))
+        self.setObjectParams(self._moose, position=(0.5,0.5))
         self.assertImage('position.png')
 
     def testHorizontalAlign(self):
-        self.setObjectOptions(self._moose, halign='center', width=1, position=(0.5,0.5))
+        self.setObjectParams(self._moose, halign='center', width=1, position=(0.5,0.5))
         self.assertImage('horizontal_alignment.png')
 
     def testVeriticalAlign(self):
-        self.setObjectOptions(self._moose, valign='top', position=(0,1))
+        self.setObjectParams(self._moose, valign='top', position=(0,1))
         self.assertImage('vertical_alignment.png')
 
     def testOpacity(self):
-        self.setObjectOptions(self._moose, opacity=0.2)
+        self.setObjectParams(self._moose, opacity=0.2)
         self.assertImage('opacity.png')
 
 if __name__ == '__main__':

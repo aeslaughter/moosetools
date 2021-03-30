@@ -29,8 +29,8 @@ class ExodusSource(base.ChiggerSource):
     VTKMAPPERTYPE = vtk.vtkPolyDataMapper
 
     @staticmethod
-    def validOptions():
-        opt = base.ChiggerSource.validOptions()
+    def validParams():
+        opt = base.ChiggerSource.validParams()
 
         # Variable selection
         opt.add('variable', vtype=str, doc="The nodal or elemental variable to render.")
@@ -55,7 +55,7 @@ class ExodusSource(base.ChiggerSource):
                     "blocks.")
 
         # Colormap
-        opt += utils.ColorMapOptions.validOptions()
+        opt += utils.ColorMapParams.validParams()
 
         opt.add('explode', None, vtype=(int, float),
                 doc="When multiple sources are being used (e.g., NemesisReader) setting this to a "
@@ -103,7 +103,7 @@ class ExodusSource(base.ChiggerSource):
                                     nOutputPorts=1, outputType='vtkMultiBlockDataSet',
                                     **kwargs)
 
-        self.__reader = self.getOption('reader')
+        self.__reader = self.getParam('reader')
         self.SetInputConnection(self.__reader.GetOutputPort())
 
         self._addFilter(filters.ExtractBlockFilter, True)
@@ -117,8 +117,8 @@ class ExodusSource(base.ChiggerSource):
         base.ChiggerSource._onRequestInformation(self, *args)
 
         # Colormap
-        #if not self.getOption('color'):
-        cmap = utils.ColorMapOptions.applyOptions(self.getOption('cmap'))
+        #if not self.getParam('color'):
+        cmap = utils.ColorMapParams.applyParams(self.getParam('cmap'))
         self._vtkmapper.SetLookupTable(cmap)
 
         # Update the block/boundary/nodeset and variable settings on the reader
@@ -135,7 +135,7 @@ class ExodusSource(base.ChiggerSource):
                     extract_indices.append(b.multiblock_index)
 
         fobject = self._filters['extract']
-        fobject.setOption('indices', extract_indices)
+        fobject.setParam('indices', extract_indices)
 
         # Misc. mapper settings
         self._vtkmapper.InterpolateScalarsBeforeMappingOn()
@@ -159,13 +159,13 @@ class ExodusSource(base.ChiggerSource):
         """
 
         rng = self.__getDataRange(out_data)
-        if self.isOptionValid('lim'):
-            rng = self.getOption('lim')
+        if self.isParamValid('lim'):
+            rng = self.getParam('lim')
         else:
-            if self.isOptionValid('min'):
-                rng[0] = self.getOption('min')
-            if self.isOptionValid('max'):
-                rng[1] = self.getOption('max')
+            if self.isParamValid('min'):
+                rng[0] = self.getParam('min')
+            if self.isParamValid('max'):
+                rng[1] = self.getParam('max')
 
         if rng[0] > rng[1]:
             self.debug("Minimum range greater than maximum: {} > {}, the range/min/max settings are being ignored.", *rng)
@@ -178,8 +178,8 @@ class ExodusSource(base.ChiggerSource):
         Return the range of all active blocks for the current variable and component.
         """
 
-        variable = self.getOption('variable')
-        component = self.getOption('component')
+        variable = self.getParam('variable')
+        component = self.getParam('component')
         rng = [float('inf'), -float('inf')]
         for i in range(out_data.GetNumberOfBlocks()):
             for j in range(out_data.GetBlock(i).GetNumberOfBlocks()):
@@ -212,7 +212,7 @@ class ExodusSource(base.ChiggerSource):
     def __updateActiveVariables(self):
         self.debug('__updateActiveVariables')
 
-        vname = self.getOption('variable')
+        vname = self.getParam('variable')
         has_nodal = self.__reader.hasVariable(ExodusReader.NODAL, vname)
         has_elemental = self.__reader.hasVariable(ExodusReader.ELEMENTAL, vname)
 
@@ -237,15 +237,15 @@ class ExodusSource(base.ChiggerSource):
             self.error("The supplied variable name '{}' does not exist on the supplied reader. The following variables are available:\n  Elemental: {}\n  Nodal: {}.", vname, velem, vnodal)
 
         if vfullname is not None:
-            current = self.__reader.getOption('variables')
+            current = self.__reader.getParam('variables')
             current = current + (vfullname,) if current is not None else (vfullname,)
-            self.__reader.setOption('variables', current)
+            self.__reader.setParam('variables', current)
             self._vtkmapper.SelectColorArray(vname)
 
         # Component
         component = -1 # Default component to utilize if not valid
-        if self.isOptionValid('component'):
-            component = self.getOption('component')
+        if self.isParamValid('component'):
+            component = self.getParam('component')
 
         if component == -1:
             self._vtkmapper.GetLookupTable().SetVectorModeToMagnitude()
@@ -258,12 +258,12 @@ class ExodusSource(base.ChiggerSource):
 
     def __setActiveBlocksHelper(self, param, binfo):
 
-        local = self.getOption(param)
+        local = self.getParam(param)
         if local == []:
             local = tuple([b.name for b in binfo])
 
         if local is not None:
-            self.__reader.setOption(param, self.__reader.getOption(param) + local)
+            self.__reader.setParam(param, self.__reader.getParam(param) + local)
 
     """
         # Explode
@@ -278,7 +278,7 @@ class ExodusSource(base.ChiggerSource):
 
     """
     def _updateOpacity(self, window, binding): #pylint: disable=unuysed-argument
-        opacity = self.getOption('opacity')
+        opacity = self.getParam('opacity')
         if binding.shift:
             if opacity > 0.05:
                 opacity -= 0.05
@@ -291,7 +291,7 @@ class ExodusSource(base.ChiggerSource):
     def _updateColorMap(self, window, binding): #pylint: disable=unused-argument
         step = 1 if not binding.shift else -1
         available = self._sources[0]._colormap.names() #pylint: disable=protected-access
-        index = available.index(self.getOption('cmap'))
+        index = available.index(self.getParam('cmap'))
 
         n = len(available)
         index += step
@@ -300,7 +300,7 @@ class ExodusSource(base.ChiggerSource):
         elif index < 0:
             index = n - 1
 
-        self.setOption('cmap', available[index])
+        self.setParam('cmap', available[index])
         self.printOption('cmap')
 
     def _updateTimestep(self, window, binding): #pylint: disable=unused-argument
@@ -309,7 +309,7 @@ class ExodusSource(base.ChiggerSource):
         n = len(self._reader.getTimes())
         if current == n:
             current = 0
-        self._reader.setOption('time', None)
-        self._reader.setOption('timestep', current)
+        self._reader.setParam('time', None)
+        self._reader.setParam('timestep', current)
         self._reader.printOption('timestep')
     """

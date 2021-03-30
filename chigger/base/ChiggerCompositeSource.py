@@ -4,9 +4,9 @@ from .. import utils
 class ChiggerCompositeSource(utils.KeyBindingMixin, ChiggerObject):
 
     @staticmethod
-    def validOptions():
-        opt = ChiggerObject.validOptions()
-        opt += utils.KeyBindingMixin.validOptions()
+    def validParams():
+        opt = ChiggerObject.validParams()
+        opt += utils.KeyBindingMixin.validParams()
         return opt
 
     @staticmethod
@@ -25,10 +25,10 @@ class ChiggerCompositeSource(utils.KeyBindingMixin, ChiggerObject):
 
         self._sources.append(src)
 
-    def applyOptions(self):
-        ChiggerObject.applyOptions(self)
+    def applyParams(self):
+        ChiggerObject.applyParams(self)
         for src in self._sources:
-            src.applyOptions()
+            src.applyParams()
 
     def getVTKActors(self):
         for src in self._sources:

@@ -18,11 +18,11 @@ class Image(Annotation):
     VTKMAPPERTYPE = vtk.vtkImageMapper
 
     @staticmethod
-    def validOptions():
+    def validParams():
         """
         Return the default options for this object.
         """
-        opt = Annotation.validOptions()
+        opt = Annotation.validParams()
         opt.add('filename', vtype=str, doc="The image filename to open.")
         opt.add('width', vtype=(int, float),
                 doc="The image width as a fraction of the window width "
@@ -75,12 +75,12 @@ class Image(Annotation):
         self._vtkmapper.SetColorLevel(127.5);       # center of the color range to map to
         self._vtkmapper.SetRenderToRectangle(False) # enables vtkActor2D::SetPosition
 
-        filename = self.getOption('filename')
+        filename = self.getParam('filename')
         if not os.path.exists(filename):
-            raise OSError('Unable to locate image file: {}'.format(self.getOption('filename')))
+            raise OSError('Unable to locate image file: {}'.format(self.getParam('filename')))
         self._vtkreader.SetFileName(filename)
 
-        self.assignOption('opacity', self._vtkactor.GetProperty().SetOpacity)
+        self.assignParam('opacity', self._vtkactor.GetProperty().SetOpacity)
 
         # Set the width/height
         image_size = self._getImageSize()
@@ -112,17 +112,17 @@ class Image(Annotation):
 
     def _getPosition(self, image_size):
         # Determine the position in viewport coordinates, accounting for alignment
-        position = list(self.getOption('position'))
+        position = list(self.getParam('position'))
 
         # Adjust the position for alignment
-        if self.getOption('halign') == 'center':
+        if self.getParam('halign') == 'center':
             position[0] = position[0] - (image_size[0]*0.5)
-        elif self.getOption('halign') == 'right':
+        elif self.getParam('halign') == 'right':
             position[0] = position[0] - image_size[0]
 
-        if self.getOption('valign') == 'center':
+        if self.getParam('valign') == 'center':
             position[1] = position[1] - (image_size[1]*0.5)
-        elif self.getOption('valign') == 'top':
+        elif self.getParam('valign') == 'top':
             position[1] = position[1] - image_size[1]
 
         return position
@@ -135,23 +135,23 @@ class Image(Annotation):
         image_size = [extent[1]/window_size[0], extent[3]/window_size[1], 0]
         aspect = image_size[0] / image_size[1] # a = w/h
 
-        if self.isOptionValid('width') and self.isOptionValid('height'):
-            image_size[0] = self.getOption('width')
-            image_size[1] = self.getOption('height')
+        if self.isParamValid('width') and self.isParamValid('height'):
+            image_size[0] = self.getParam('width')
+            image_size[1] = self.getParam('height')
 
-        elif self.isOptionValid('width'):
-            image_size[0] = self.getOption('width')
+        elif self.isParamValid('width'):
+            image_size[0] = self.getParam('width')
             image_size[1] = image_size[0] / aspect # h = w / a
 
-        elif self.isOptionValid('height'):
-            image_size[1] = self.getOption('height')
+        elif self.isParamValid('height'):
+            image_size[1] = self.getParam('height')
             image_size[0] = image_size[1] * aspect # w = h * a
 
         return image_size
 
     """
     def _highlight(self):
-        if self.getOption('highlight'):
+        if self.getParam('highlight'):
             xmin, ymin = self._vtkactor.GetPosition()
             xmax = xmin + self._vtkactor.GetWidth()
             ymax = ymin + self._vtkactor.GetHeight()
@@ -165,9 +165,9 @@ class Image(Annotation):
                                                     interactive=False,
                                                     bounds=bounds)
             else:
-                self._outline.setOption('bounds', bounds)
+                self._outline.setParam('bounds', bounds)
 
-        elif (not self.getOption('highlight')) and (self._outline is not None):
+        elif (not self.getParam('highlight')) and (self._outline is not None):
             self._outline.remove()
             del self._outline
             self._outline = None
@@ -183,8 +183,8 @@ class Image(Annotation):
          h = image_size[1] / window_size[1]
 
          if dx != 0:
-             self.setOption('width', w + dx)
+             self.setParam('width', w + dx)
              self.printOption('width')
          else:
-             self.setOption('height', h + dy)
+             self.setParam('height', h + dy)
              self.printOption('height')

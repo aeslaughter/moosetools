@@ -7,28 +7,28 @@
 #* Licensed under LGPL 2.1, please see LICENSE for details
 #* https://www.gnu.org/licenses/lgpl-2.1.html
 from .AutoColor import AutoColor, Color
-from .Options import Options
+from .ChiggerInputParameters import ChiggerInputParameters
 
-def validOptions():
+def validParams():
     """Returns options for vtkTextProperty."""
-    opt = Options()
+    opt = ChiggerInputParameters()
 
-    bg = Options()
+    bg = ChiggerInputParameters()
     bg.add('color', vtype=(Color, AutoColor), doc="The primary background color")
     bg.add('color2', vtype=Color, doc="The secondary background color, when specified a gradient background is enabled")
     bg.add('opacity', default=0, vtype=(int, float),
            verify=(lambda v: v>=0 and v <= 1, "The 'opacity' must be in the range [0,1]"),
            doc="The background opacity")
-    opt.add('background', default=bg, vtype=Options, doc="Background options")
+    opt.add('background', default=bg, vtype=ChiggerInputParameters, doc="Background options")
     return opt
 
-def applyOptions(viewport, opt):
+def applyParams(viewport, opt):
     """
     Applies background options to vtkViewport object.
 
     Inputs:
         viewport: A vtk.vtkViewport object for applying options.
-        opt: The Options object containing the settings to apply.
+        opt: The Params object containing the settings to apply.
     """
     opt.assign('opacity', viewport.SetBackgroundAlpha)
     if opt.isValid('color'):

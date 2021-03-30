@@ -40,9 +40,9 @@ class KeyBindingMixin(object):
     Class for inheriting key binding support for an object.
     """
     @staticmethod
-    def validOptions():
-        from . import Options
-        opt = Options()
+    def validParams():
+        from . import Params
+        opt = Params()
         return opt
 
     @staticmethod

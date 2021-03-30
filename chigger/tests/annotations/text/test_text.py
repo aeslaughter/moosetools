@@ -18,27 +18,27 @@ class TestFont(chigger.base.ChiggerTestCase):
         self.assertImage('default.png')
 
     def testColor(self):
-        self.setObjectOptions(self._text, font_color=chigger.utils.Color(1,0,1))
+        self.setObjectParams(self._text, font_color=chigger.utils.Color(1,0,1))
         self.assertImage('font_color.png')
 
     def testOpacity(self):
-        self.setObjectOptions(self._text, font_opacity=0.2)
+        self.setObjectParams(self._text, font_opacity=0.2)
         self.assertImage('font_opacity.png')
 
     def testSize(self):
-        self.setObjectOptions(self._text, font_size=1)
+        self.setObjectParams(self._text, font_size=1)
         self.assertImage('font_size.png')
 
     def testItalic(self):
-        self.setObjectOptions(self._text, font_italic=True)
+        self.setObjectParams(self._text, font_italic=True)
         self.assertImage('font_italic.png')
 
     def testBold(self):
-        self.setObjectOptions(self._text, font_bold=True)
+        self.setObjectParams(self._text, font_bold=True)
         self.assertImage('font_bold.png')
 
     def testFamily(self):
-        self.setObjectOptions(self._text, font_family='times')
+        self.setObjectParams(self._text, font_family='times')
         self.assertImage('font_family.png')
 
     def testErrors(self):
@@ -58,15 +58,15 @@ class TestFrame(chigger.base.ChiggerTestCase):
         self._text = chigger.annotations.Text(text='CHIGGER', position=(0.5, 0.5), halign='center')
 
     def testOn(self):
-        self.setObjectOptions(self._text, 'frame', on=True)
+        self.setObjectParams(self._text, 'frame', on=True)
         self.assertImage('frame_on.png')
 
     def testColor(self):
-        self.setObjectOptions(self._text, 'frame', on=True, width=10, color=(0.2, 0.7, 0.8))
+        self.setObjectParams(self._text, 'frame', on=True, width=10, color=(0.2, 0.7, 0.8))
         self.assertImage('frame_color.png')
 
     def testWidth(self):
-        self.setObjectOptions(self._text, frame_on=True, frame_width=10)
+        self.setObjectParams(self._text, frame_on=True, frame_width=10)
         self.assertImage('frame_width.png')
 
 class TestBackground(chigger.base.ChiggerTestCase):
@@ -75,11 +75,11 @@ class TestBackground(chigger.base.ChiggerTestCase):
         self._text = chigger.annotations.Text(text='CHIGGER', position=(0.5, 0.5), halign='center')
 
     def testColor(self):
-        self.setObjectOptions(self._text, background_color=chigger.utils.Color(1,0,1))
+        self.setObjectParams(self._text, background_color=chigger.utils.Color(1,0,1))
         self.assertImage('background_color.png')
 
     def testOpacity(self):
-        self.setObjectOptions(self._text, 'background', color=chigger.utils.Color(1,0,1), opacity=0.2)
+        self.setObjectParams(self._text, 'background', color=chigger.utils.Color(1,0,1), opacity=0.2)
         self.assertImage('background_opacity.png')
 
     def testErrors(self):
@@ -93,27 +93,27 @@ class TestRotate(chigger.base.ChiggerTestCase):
         self._text = chigger.annotations.Text(text='CHIGGER', position=(0.5, 0.5), halign='center')
 
     def testRotate45(self):
-        self.setObjectOptions(self._text, rotate=45)
+        self.setObjectParams(self._text, rotate=45)
         self.assertImage('rotate45.png')
 
     def testRotate90(self):
-        self.setObjectOptions(self._text, rotate=90)
+        self.setObjectParams(self._text, rotate=90)
         self.assertImage('rotate90.png')
 
     def testRotate135(self):
-        self.setObjectOptions(self._text, rotate=135)
+        self.setObjectParams(self._text, rotate=135)
         self.assertImage('rotate135.png')
 
     def testRotate225(self):
-        self.setObjectOptions(self._text, rotate=225)
+        self.setObjectParams(self._text, rotate=225)
         self.assertImage('rotate225.png')
 
     def testRotate270(self):
-        self.setObjectOptions(self._text, rotate=270)
+        self.setObjectParams(self._text, rotate=270)
         self.assertImage('rotate270.png')
 
     def testRotate315(self):
-        self.setObjectOptions(self._text, rotate=315)
+        self.setObjectParams(self._text, rotate=315)
         self.assertImage('rotate315.png')
 
     def testErrors(self):
@@ -127,15 +127,15 @@ class TestHAlign(chigger.base.ChiggerTestCase):
         self._text = chigger.annotations.Text(text='CHIGGER', position=(0.5, 0.5))
 
     def testLeft(self):
-        self.setObjectOptions(self._text, halign='left')
+        self.setObjectParams(self._text, halign='left')
         self.assertImage('halign_left.png')
 
     def testCenter(self):
-        self.setObjectOptions(self._text, halign='center')
+        self.setObjectParams(self._text, halign='center')
         self.assertImage('halign_center.png')
 
     def testRight(self):
-        self.setObjectOptions(self._text, halign='right')
+        self.setObjectParams(self._text, halign='right')
         self.assertImage('halign_right.png')
 
 class TestVAlign(chigger.base.ChiggerTestCase):
@@ -144,15 +144,15 @@ class TestVAlign(chigger.base.ChiggerTestCase):
         self._text = chigger.annotations.Text(text='A', font_size=0.5, position=(0.5, 0.5), halign='center')
 
     def testBottom(self):
-        self.setObjectOptions(self._text, valign='bottom')
+        self.setObjectParams(self._text, valign='bottom')
         self.assertImage('valign_bottom.png')
 
     def testCenter(self):
-        self.setObjectOptions(self._text, valign='center')
+        self.setObjectParams(self._text, valign='center')
         self.assertImage('valign_center.png')
 
     def testTop(self):
-        self.setObjectOptions(self._text, valign='top')
+        self.setObjectParams(self._text, valign='top')
         self.assertImage('valign_top.png')
 
 class TestAutoColorText(chigger.base.ChiggerTestCase):
@@ -161,11 +161,11 @@ class TestAutoColorText(chigger.base.ChiggerTestCase):
         self._text = chigger.annotations.Text(text='chigger', font_size=0.2, position=(0.5, 0.5), halign='center')
 
     def testDark(self):
-        self._window.setOptions(background_color=chigger.utils.Color(0.8, 0.8, 0.8))
+        self._window.setParams(background_color=chigger.utils.Color(0.8, 0.8, 0.8))
         self.assertImage('auto_color_dark.png')
 
     def testLight(self):
-        self._window.setOptions(background_color=chigger.utils.Color(0.2, 0.2, 0.2))
+        self._window.setParams(background_color=chigger.utils.Color(0.2, 0.2, 0.2))
         self.assertImage('auto_color_light.png')
 
 class TestMath(chigger.base.ChiggerTestCase):

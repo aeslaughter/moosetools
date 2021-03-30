@@ -35,8 +35,8 @@ def create(base_type):
         FILTER_TYPES = []
 
         @staticmethod
-        def validOptions():
-            opt = source_type.validOptions()
+        def validParams():
+            opt = source_type.validParams()
             opt.add('origin', default=(0, 0, 0), vtype=(int, float), size=3,
                     doc='Define the origin of the plane.')
             opt.add('point1', default=(1, 0, 0), vtype=(int, float), size=3,
@@ -48,7 +48,7 @@ def create(base_type):
             opt.add('data', None, vtype=vtk.vtkFloatArray,
                     doc="The VTK data to attach to the vtkMapper for this object, for used with " \
                         "the 'cmap' option.")
-            opt += ColorMap.validOptions()
+            opt += ColorMap.validParams()
            # opt.set('color', None)
             opt.set('cmap', None)
             return opt
@@ -63,16 +63,16 @@ def create(base_type):
             super(PlaneSourceMeta, self).update(**kwargs)
 
             if self.isValid('origin'):
-                self._vtksource.SetOrigin(*self.getOption('origin'))
+                self._vtksource.SetOrigin(*self.getParam('origin'))
 
             if self.isValid('point1'):
-                self._vtksource.SetPoint1(*self.getOption('point1'))
+                self._vtksource.SetPoint1(*self.getParam('point1'))
 
             if self.isValid('point2'):
-                self._vtksource.SetPoint2(*self.getOption('point2'))
+                self._vtksource.SetPoint2(*self.getParam('point2'))
 
             if self.isValid('resolution'):
-                self._vtksource.SetResolution(*self.getOption('resolution'))
+                self._vtksource.SetResolution(*self.getParam('resolution'))
 
             if self.isValid('cmap'):
                 if self.isValid('color'):
@@ -85,12 +85,12 @@ def create(base_type):
 
                 if self.isValid('data'):
                     self._vtksource.Update()
-                    data = self.getOption('data')
+                    data = self.getParam('data')
                     self._vtksource.GetOutput().GetCellData().SetScalars(data)
-                    cmap_options = {key:self.getOption(key) for key in ['cmap', 'cmap_reverse',
-                                                                        'cmap_num_colors',
-                                                                        'cmap_range']}
-                    self._colormap.setOptions(**cmap_options)
+                    cmap_params = {key:self.getParam(key) for key in ['cmap', 'cmap_reverse',
+                                                                      'cmap_num_colors',
+                                                                      'cmap_range']}
+                    self._colormap.setParams(**cmap_params)
                     self._vtkmapper.SetScalarRange(data.GetRange(0))
                     self._vtkmapper.SetLookupTable(self._colormap())
 

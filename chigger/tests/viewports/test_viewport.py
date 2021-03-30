@@ -24,10 +24,10 @@ def main():
     test.assertImage('initial.png')
 
     # location
-    test.setObjectOptions(left, xmin=0.1, xmax=0.4)
+    test.setObjectParams(left, xmin=0.1, xmax=0.4)
     test.assertImage('location.png')
 
-    test.setObjectOptions(left, xmin=0, xmax=0.5)
+    test.setObjectParams(left, xmin=0, xmax=0.5)
     test.assertImage('initial.png')
 
     # xmin/ymin/xmax/ymax range check
@@ -36,7 +36,7 @@ def main():
     test.assertInLog("Value must be in range [0,1]", left, ymin=1980)
     test.assertInLog("Value must be in range [0,1]", left, ymax=1980)
 
-    test.setObjectOptions(left, highlight=True)
+    test.setObjectParams(left, highlight=True)
     test.assertImage('highlight.png')
 
     test.pressKey('s')

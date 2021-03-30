@@ -15,13 +15,13 @@ class Time(TextBase):
     """
 
     @staticmethod
-    def validOptions():
+    def validParams():
         """
         Return default options for this object.
         """
-        opt = TextBase.validOptions()
-        opt.add('days', vtype=(int, float), default=0, doc="The number of days.")
+        opt = TextBase.validParams()
         opt.add('weeks', vtype=(int, float), default=0, doc="The number of weeks.")
+        opt.add('days', vtype=(int, float), default=0, doc="The number of days.")
         opt.add('hours', vtype=(int, float), default=0, doc="The number of hours.")
         opt.add('minutes', vtype=(int, float), default=0, doc="The number of minutes.")
         opt.add('seconds', vtype=(int, float), default=0, doc="The number of seconds.")
@@ -35,6 +35,7 @@ class Time(TextBase):
         """
         Converts timestamp to a text string for display. (override)
         """
-        td = datetime.timedelta(**{k:self.getOption(k) for k in ['days', 'weeks', 'hours', 'minutes', 'seconds', 'microseconds', 'milliseconds']})
+        td = datetime.timedelta(**{k:self.getParam(k) for k in ['weeks', 'days', 'hours', 'minutes', 'seconds', 'microseconds', 'milliseconds']})
+        print(self.getParam('weeks'), self.getParam('seconds'))
         self._vtkactor.SetInput(str(td))
         TextBase._onRequestInformation(self, *args)

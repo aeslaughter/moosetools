@@ -12,11 +12,11 @@ from .TextBase import TextBase
 class Text(TextBase):
 
     @staticmethod
-    def validOptions():
-        opt = TextBase.validOptions()
+    def validParams():
+        opt = TextBase.validParams()
         opt.add('text', vtype=str, required=True, doc="The text to display.")
         return opt
 
     def _onRequestInformation(self, *args):
-        self.assignOption('text', self._vtkactor.SetInput)
+        self.assignParam('text', self._vtkactor.SetInput)
         TextBase._onRequestInformation(self, *args)

@@ -35,9 +35,9 @@ class ChiggerSourceBase(utils.KeyBindingMixin, ChiggerAlgorithm):
     VTKMAPPERTYPE = None
 
     @classmethod
-    def validOptions(cls):
-        opt = ChiggerAlgorithm.validOptions()
-        opt += utils.KeyBindingMixin.validOptions()
+    def validParams(cls):
+        opt = ChiggerAlgorithm.validParams()
+        opt += utils.KeyBindingMixin.validParams()
 
         opt.add('pickable', default=True, vtype=bool,
                 doc="Indicates if the source can be selected via the MainWindowObserver")
@@ -70,7 +70,7 @@ class ChiggerSourceBase(utils.KeyBindingMixin, ChiggerAlgorithm):
     def __init__(self, **kwargs):
 
         # Storage for the available filters for this object, this needs to be before the base
-        # class __init__ because the setOptions command of this class attempts to apply options to
+        # class __init__ because the setParams command of this class attempts to apply options to
         # the filters.
         self.__filter_info = list()
 
@@ -105,14 +105,14 @@ class ChiggerSourceBase(utils.KeyBindingMixin, ChiggerAlgorithm):
     @property
     def _viewport(self):
         """Property so that self._viewport acts like the actual Viewport object."""
-        return self.getOption('viewport')
+        return self.getParam('viewport')
 
     def _addFilter(self, filter_type, active=False):
         self.__filter_info.append(FilterInfo(filter_type=filter_type, active=active))
 
         fname = filter_type.FILTERNAME
-        self._options.add(fname, filter_type.validOptions(),
-                          doc="Options for the '{}' filter.".format(fname))
+        self._parameters.add(fname, filter_type.validParams(),
+                          doc="Params for the '{}' filter.".format(fname))
 
     def remove(self):
         self._viewport.remove(self)
@@ -138,8 +138,8 @@ class ChiggerSourceBase(utils.KeyBindingMixin, ChiggerAlgorithm):
     def getFilters(self):
         return self._filters
 
-    def setOptions(self, *args, **kwargs):
-        ChiggerAlgorithm.setOptions(self, *args, **kwargs)
+    def setParams(self, *args, **kwargs):
+        ChiggerAlgorithm.setParams(self, *args, **kwargs)
 
         for finfo in self.__filter_info:
             if finfo.filter_type.FILTERNAME in args:
@@ -150,8 +150,8 @@ class ChiggerSourceBase(utils.KeyBindingMixin, ChiggerAlgorithm):
         ChiggerAlgorithm._onRequestInformation(self, *args)
 
         # Apply Actor options (must exist in both vtkProperty and vtkProperty2D
-        #self.assignOption('linewidth', self._vtkactor.GetProperty().SetLineWidth)
-        #self.assignOption('color', self._vtkactor.GetProperty().SetColor)
+        #self.assignParam('linewidth', self._vtkactor.GetProperty().SetLineWidth)
+        #self.assignParam('color', self._vtkactor.GetProperty().SetColor)
 
         # Connect the filters
         self.__connectFilters()
@@ -196,22 +196,22 @@ class ChiggerSourceBase(utils.KeyBindingMixin, ChiggerAlgorithm):
         Don't change this basic design, you spent way too much time getting it to this. Leave it.
         - Andrew (9.18.2020)
         """
-        if self.getOption('highlight') and (self._outline is None):
+        if self.getParam('highlight') and (self._outline is None):
             from .. import geometric # avoid cyclic import
             is_3D = isinstance(self.getVTKActor(), vtk.vtkActor)
             obj_type = geometric.Highlight if is_3D else geometric.Highlight2D
             offset = 0.05 if is_3D else 0.02
             self._outline = obj_type(viewport=self._viewport, source=self, pickable=False,
                                      linewidth=3, color=utils.Color(1,1,0))
-        elif (not self.getOption('highlight')) and (self._outline is not None):
+        elif (not self.getParam('highlight')) and (self._outline is not None):
             self._outline.remove()
             del self._outline
             self._outline = None
 
     def _setOpacity(self, delta):
-        value = self.getOption('opacity') + delta
+        value = self.getParam('opacity') + delta
         value = 0 if value < 0 else 1 if value > 1 else value
-        self.setOption('opacity', value)
+        self.setParam('opacity', value)
         self.printOption('opacity')
 
     def __del__(self):
@@ -226,8 +226,8 @@ class ChiggerSource(ChiggerSourceBase):
     VTKACTORTYPE = vtk.vtkActor
 
     @classmethod
-    def validOptions(cls):
-        opt = ChiggerSourceBase.validOptions()
+    def validParams(cls):
+        opt = ChiggerSourceBase.validParams()
 
         opt.add('representation', default='surface', allow=('surface', 'wireframe', 'points'),
                 doc="View volume representation.")
@@ -247,7 +247,7 @@ class ChiggerSource(ChiggerSourceBase):
     def _onRequestInformation(self, *args):
         ChiggerSourceBase._onRequestInformation(self, *args)
 
-        rep = self.getOption('representation')
+        rep = self.getParam('representation')
         if rep == 'surface':
             self._vtkactor.GetProperty().SetRepresentationToSurface()
         elif rep == 'wireframe':
@@ -255,16 +255,16 @@ class ChiggerSource(ChiggerSourceBase):
         elif rep == 'points':
             self._vtkactor.GetProperty().SetRepresentationToPoints()
 
-        #self.assignOption('edges', self._vtkactor.GetProperty().SetEdgeVisibility)
-        #self.assignOption('edgecolor', self._vtkactor.GetProperty().SetEdgeColor)
-        #self.assignOption('edgewidth', self._vtkactor.GetProperty().SetLineWidth)
+        #self.assignParam('edges', self._vtkactor.GetProperty().SetEdgeVisibility)
+        #self.assignParam('edgecolor', self._vtkactor.GetProperty().SetEdgeColor)
+        #self.assignParam('edgewidth', self._vtkactor.GetProperty().SetLineWidth)
 
-        self.assignOption('lines_as_tubes', self._vtkactor.GetProperty().SetRenderLinesAsTubes)
+        self.assignParam('lines_as_tubes', self._vtkactor.GetProperty().SetRenderLinesAsTubes)
 
 class ChiggerSource2D(ChiggerSourceBase):
     VTKACTORTYPE = vtk.vtkActor2D
 
     @classmethod
-    def validOptions(cls):
-        opt = ChiggerSourceBase.validOptions()
+    def validParams(cls):
+        opt = ChiggerSourceBase.validParams()
         return opt

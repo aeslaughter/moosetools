@@ -11,9 +11,9 @@
 import sys
 import re
 import unittest
-from chigger.utils import Options
+from chigger.utils import Params
 
-class TestOptions(unittest.TestCase):
+class TestParams(unittest.TestCase):
 
     def assertInWarning(self, msg):
         output = sys.stdout.getvalue()
@@ -26,7 +26,7 @@ class TestOptions(unittest.TestCase):
             self.assertTrue(False, "No warnings exist.")
 
     def testMinimal(self):
-        opts = Options()
+        opts = Params()
         opts.add('foo')
         self.assertEqual(opts.keys(), ['foo'])
         self.assertFalse(opts.isValid('foo'))
@@ -35,7 +35,7 @@ class TestOptions(unittest.TestCase):
         self.assertTrue(opts.hasOption('foo'))
 
     def testSet(self):
-        opts = Options()
+        opts = Params()
         opts.add('foo')
         opts.set('foo', 42)
         self.assertEqual(opts.keys(), ['foo'])
@@ -46,7 +46,7 @@ class TestOptions(unittest.TestCase):
         self.assertTrue(opts.hasOption('foo'))
 
     def testModified(self):
-        opts = Options()
+        opts = Params()
         opts.add('foo', 42)
         self.assertTrue(opts.modified())
         self.assertEqual(opts.applyOption('foo'), 42)
@@ -56,11 +56,11 @@ class TestOptions(unittest.TestCase):
         self.assertEqual(opts.applyOption('foo'), 43)
         self.assertFalse(opts.modified())
 
-    def testSubOptions(self):
-        sub_opts = Options()
+    def testSubParams(self):
+        sub_opts = Params()
         sub_opts.add('bar', 42)
 
-        opts = Options()
+        opts = Params()
         opts.add('foo', sub_opts)
 
         opts.set('foo', {'bar', 43})

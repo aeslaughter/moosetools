@@ -13,8 +13,8 @@ class Annotation(base.ChiggerSource2D):
     Base class for 2D annotations.
     """
     @staticmethod
-    def validOptions():
-        opt = base.ChiggerSource2D.validOptions()
+    def validParams():
+        opt = base.ChiggerSource2D.validParams()
         opt.add('position', (0, 0), vtype=(int, float), size=2,
                 doc="The text position in normalized viewport coordinates.")
         return opt
@@ -33,6 +33,6 @@ class Annotation(base.ChiggerSource2D):
         return bindings
 
     def _move(self, dx, dy):
-        pos = self.getOption('position')
-        self.setOption('position', (pos[0] + dx, pos[1] + dy))
+        pos = self.getParam('position')
+        self.setParam('position', (pos[0] + dx, pos[1] + dy))
         self.printOption('position')

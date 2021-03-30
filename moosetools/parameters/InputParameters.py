@@ -98,6 +98,14 @@ class InputParameters(object):
         """
         return self._getParameter(*args)
 
+    def parameters(self):
+        """
+        Iterate over the `Parameter` objects.
+        """
+        for name, param in self.__parameters.items():
+            if not param.private:
+                yield param
+
     def items(self):
         """
         Provides dict.items() functionality.

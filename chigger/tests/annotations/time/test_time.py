@@ -18,7 +18,8 @@ class TestTime(chigger.base.ChiggerTestCase):
         self.assertImage('default.png')
 
     def testChange(self):
-        self.setObjectOptions(self._time, weeks=500)
+        self.setObjectParams(self._time, seconds=52, weeks=500)
+        self._time.setParams(weeks=500)
         self.assertImage('change.png')
 
 if __name__ == '__main__':

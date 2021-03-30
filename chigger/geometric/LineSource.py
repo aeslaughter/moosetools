@@ -20,11 +20,11 @@ class LineSource(BaseType):
     FILTER_TYPES = [filters.TubeFilter]
 
     @staticmethod
-    def validOptions():
+    def validParams():
         """
         Return the default options for this object.
         """
-        opt = BaseType.validOptions()
+        opt = BaseType.validParams()
         opt.add('resolution', default=100, vtype=int,
                 doc="The number of points sampled over the line.")
         opt.add('point1', default=(0, 0, 0), size=3, vtype=(int, float),
@@ -57,7 +57,7 @@ class LineSource(BaseType):
             self._vtksource.SetPoint2(self.applyOption('point2'))
 
         if self.isValid('data'):
-            data = self.getOption('data')
+            data = self.getParam('data')
             n = len(data)
             self._vtksource.SetResolution(n-1)
             self._vtksource.Update()
@@ -69,8 +69,8 @@ class LineSource(BaseType):
             self._vtkmapper.SetScalarRange(self._data.GetRange(0))
             self._vtkmapper.SetScalarModeToUsePointFieldData()
 
-            cmap_options = {key:self.getOption(key) for key in ['cmap', 'cmap_reverse',
-                                                                'cmap_num_colors',
-                                                                'cmap_range']}
-            self._colormap.setOptions(**cmap_options)
+            cmap_params = {key:self.getParam(key) for key in ['cmap', 'cmap_reverse',
+                                                              'cmap_num_colors',
+                                                              'cmap_range']}
+            self._colormap.setParams(**cmap_params)
             self._vtkmapper.SetLookupTable(self._colormap())

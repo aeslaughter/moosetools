@@ -11,8 +11,8 @@ class ChiggerFilter(base.ChiggerAlgorithm):
     FILTERNAME = None
 
     @staticmethod
-    def validOptions():
-        opt = base.ChiggerAlgorithm.validOptions()
+    def validParams():
+        opt = base.ChiggerAlgorithm.validParams()
         return opt
 
     def __init__(self, **kwargs):
@@ -32,7 +32,7 @@ class ChiggerFilter(base.ChiggerAlgorithm):
         opt.ShallowCopy(self._vtkfilter.GetOutput())
         return 1
 
-    def applyOptions(self):
+    def applyParams(self):
         pass
 
     def __del__(self):

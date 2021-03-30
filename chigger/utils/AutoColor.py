@@ -44,15 +44,15 @@ def auto_adjust_color(parent, children):
     see Window.py Viewport.py
     """
     def update_color_param(param, c):
-        if param.vtype and (AutoColor in param.vtype) and (param.value is None):
-            param.value = c
-        elif param.value.__class__.__name__ == 'Options': # use name to avoid circular import
+        if (param.vtype is not None) and (AutoColor in param.vtype) and (param.value is None):
+            param.setValue(c)
+        elif param.value.__class__.__name__ == 'Params': # use name to avoid circular import
             for sub_param in param.value.parameters():
                 update_color_param(sub_param, c)
 
-    if parent.isOptionValid('background', 'color') and (not parent.isOptionValid('background', 'color2')):
-        bg = parent.getOption('background', 'color')
+    if parent.isParamValid('background', 'color') and (not parent.isParamValid('background', 'color2')):
+        bg = parent.getParam('background', 'color')
         color = Color(1., 1., 1.) if sum(bg.rgb()) < 1.5 else Color(0., 0., 0.)
         for child in children:
-            for param in child._options.parameters():
+            for param in child.parameters().parameters():
                 update_color_param(param, color)

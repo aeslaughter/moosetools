@@ -8,8 +8,8 @@ class Outline(GeometricSource):
     VTKSOURCETYPE = vtk.vtkOutlineSource
 
     @staticmethod
-    def validOptions():
-        opt = GeometricSource.validOptions()
+    def validParams():
+        opt = GeometricSource.validParams()
         opt.add('color', vtype=utils.AutoColor, doc="The color of the outline")
         opt.add('linewidth', vtype=(int, float), doc="The linewidth for the outline")
         opt.add('xmin', default=0, vtype=(int, float),
@@ -33,20 +33,20 @@ class Outline(GeometricSource):
 
     def _onRequestInformation(self, *args):
         GeometricSource._onRequestInformation(self, *args)
-        offset = self.getOption('offset')
-        self._vtksource.SetBounds(self.getOption('xmin') - offset, self.getOption('xmax') + offset,
-                                  self.getOption('ymin') - offset, self.getOption('ymax') + offset,
-                                  self.getOption('zmin') - offset, self.getOption('zmax') + offset)
-        if self.isOptionValid('color'):
-            self._vtkactor.GetProperty().SetColor(self.getOption('color').rgb())
-        self.assignOption('linewidth', self._vtkactor.GetProperty().SetLineWidth)
+        offset = self.getParam('offset')
+        self._vtksource.SetBounds(self.getParam('xmin') - offset, self.getParam('xmax') + offset,
+                                  self.getParam('ymin') - offset, self.getParam('ymax') + offset,
+                                  self.getParam('zmin') - offset, self.getParam('zmax') + offset)
+        if self.isParamValid('color'):
+            self._vtkactor.GetProperty().SetColor(self.getParam('color').rgb())
+        self.assignParam('linewidth', self._vtkactor.GetProperty().SetLineWidth)
 
 class Outline2D(GeometricSource2D):
     VTKSOURCETYPE = vtk.vtkOutlineSource
 
     @staticmethod
-    def validOptions():
-        opt = GeometricSource2D.validOptions()
+    def validParams():
+        opt = GeometricSource2D.validParams()
         opt.add('color', vtype=utils.AutoColor, doc="The color of the outline")
         opt.add('linewidth', vtype=(int, float), doc="The linewidth for the outline")
         opt.add('xmin', default=0, vtype=(int, float),
@@ -64,16 +64,16 @@ class Outline2D(GeometricSource2D):
     def _onRequestInformation(self, *args):
         GeometricSource2D._onRequestInformation(self, *args)
         self._vtksource.SetBounds(*self._getBounds())
-        if self.isOptionValid('color'):
-            self._vtkactor.GetProperty().SetColor(self.getOption('color').rgb())
-        self.assignOption('linewidth', self._vtkactor.GetProperty().SetLineWidth)
+        if self.isParamValid('color'):
+            self._vtkactor.GetProperty().SetColor(self.getParam('color').rgb())
+        self.assignParam('linewidth', self._vtkactor.GetProperty().SetLineWidth)
 
     def _getBounds(self):
-        offset = self.getOption('offset')
-        xmin = self.getOption('xmin') - offset
-        xmax = self.getOption('xmax') + offset
-        ymin = self.getOption('ymin') - offset
-        ymax = self.getOption('ymax') + offset
+        offset = self.getParam('offset')
+        xmin = self.getParam('xmin') - offset
+        xmax = self.getParam('xmax') + offset
+        ymin = self.getParam('ymin') - offset
+        ymax = self.getParam('ymax') + offset
 
         if xmin < 0:
             self.error("The 'xmin' value ({}) is less than zero with offset applied ({}).", xmin, offset)

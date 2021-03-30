@@ -19,8 +19,8 @@ class CylinderSource(BaseType):
     """
 
     @staticmethod
-    def validOptions():
-        opt = BaseType.validOptions()
+    def validParams():
+        opt = BaseType.validParams()
         opt.add('height', doc="The height of the cylinder", vtype=(int, float))
         opt.add('radius', doc="The radius of the cylinder.", vtype=(int, float))
         opt.add('resolution', default=8, doc="The number of sides of the cylinder.", vtype=int)

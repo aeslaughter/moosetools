@@ -20,9 +20,9 @@ class ExodusResult(base.ChiggerResult):
     Result object to displaying ExodusII data from a single reader.
     """
     @staticmethod
-    def validOptions():
-        opt = base.ChiggerResult.validOptions()
-        opt += ExodusSource.validOptions()
+    def validParams():
+        opt = base.ChiggerResult.validParams()
+        opt += ExodusSource.validParams()
         opt.add('explode', None, "When multiple sources are being used (e.g., NemesisReader) "
                                  "setting this to a value will cause the various sources to be "
                                  "'exploded' away from the center of the entire object.",
@@ -86,14 +86,14 @@ class ExodusResult(base.ChiggerResult):
             return
 
         # Re-compute ranges for all sources
-        rng = list(self.getRange(local=self.getOption('local_range')))
+        rng = list(self.getRange(local=self.getParam('local_range')))
         if self.isValid('range'):
-            rng = self.getOption('range')
+            rng = self.getParam('range')
         else:
             if self.isValid('min'):
-                rng[0] = self.getOption('min')
+                rng[0] = self.getParam('min')
             if self.isValid('max'):
-                rng[1] = self.getOption('max')
+                rng[1] = self.getParam('max')
 
         if rng[0] > rng[1]:
             mooseutils.mooseDebug("Minimum range greater than maximum:", rng[0], ">", rng[1],
@@ -130,7 +130,7 @@ class ExodusResult(base.ChiggerResult):
         return ((b[1]-b[0])/2., (b[3]-b[2])/2., (b[5]-b[4])/2.)
 
     def _updateOpacity(self, window, binding): #pylint: disable=unused-argument
-        opacity = self.getOption('opacity')
+        opacity = self.getParam('opacity')
         if binding.shift:
             if opacity > 0.05:
                 opacity -= 0.05
@@ -143,7 +143,7 @@ class ExodusResult(base.ChiggerResult):
     def _updateColorMap(self, window, binding): #pylint: disable=unused-argument
         step = 1 if not binding.shift else -1
         available = self._sources[0]._colormap.names() #pylint: disable=protected-access
-        index = available.index(self.getOption('cmap'))
+        index = available.index(self.getParam('cmap'))
 
         n = len(available)
         index += step
@@ -152,7 +152,7 @@ class ExodusResult(base.ChiggerResult):
         elif index < 0:
             index = n - 1
 
-        self.setOption('cmap', available[index])
+        self.setParam('cmap', available[index])
         self.printOption('cmap')
 
     def _updateTimestep(self, window, binding): #pylint: disable=unused-argument
@@ -161,6 +161,6 @@ class ExodusResult(base.ChiggerResult):
         n = len(self._reader.getTimes())
         if current == n:
             current = 0
-        self._reader.setOption('time', None)
-        self._reader.setOption('timestep', current)
+        self._reader.setParam('time', None)
+        self._reader.setParam('timestep', current)
         self._reader.printOption('timestep')

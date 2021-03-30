@@ -57,23 +57,23 @@ class TestChiggerAlgorithm(unittest.TestCase):
         obj = chigger.base.ChiggerAlgorithm()
         t0 = obj.GetMTime()
 
-        obj.setOption('name', 'andrew')
+        obj.setParam('name', 'andrew')
         t1 = obj.GetMTime()
         self.assertTrue(t1 > t0)
 
-        obj.setOption('name', 'andrew')
+        obj.setParam('name', 'andrew')
         t2 = obj.GetMTime()
         self.assertEqual(t1, t2)
 
-    def testSetOptions(self):
+    def testSetParams(self):
         obj = chigger.base.ChiggerAlgorithm()
         t0 = obj.GetMTime()
 
-        obj.setOptions(name='andrew')
+        obj.setParams(name='andrew')
         t1 = obj.GetMTime()
         self.assertTrue(t1 > t0)
 
-        obj.setOptions(name='andrew')
+        obj.setParams(name='andrew')
         t2 = obj.GetMTime()
         self.assertEqual(t1, t2)
 

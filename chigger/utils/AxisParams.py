@@ -10,7 +10,7 @@
 
 import vtk
 import mooseutils
-from .Options import Options
+from .ChiggerInputParameters import ChiggerInputParameters
 
 VTK_NOTATION_ENUM = [
     vtk.vtkAxis.STANDARD_NOTATION,
@@ -19,9 +19,9 @@ VTK_NOTATION_ENUM = [
     vtk.vtkAxis.PRINTF_NOTATION
 ]
 
-def validOptions():
+def validParams():
     """Returns options for vtkAxis objects."""
-    opt = Options()
+    opt = ChiggerInputParameters()
     opt.add('fontcolor', default=(1,1,1), vtype=(int, float), size=3, doc="The color of the axis, ticks, and labels.")
     opt.add('axis_fontcolor', vtype=(int, float), size=3, doc="The color of the axis, this overrides the value in 'fontcolor'.")
 
@@ -56,7 +56,7 @@ def validOptions():
     # opt.add('axis_scale', 1, vtype=(int, float), doc="The axis scaling factor.")
     # opt.add('zero_tol', 1e-10, vtype=(int, float), doc="Tolerance for considering limits to be the same.")
 
-def setOptions(vtkaxis, opt): #pylint: disable=invalid-name
+def setParams(vtkaxis, opt): #pylint: disable=invalid-name
     """
     Set the options for vtkAxis object.
     """

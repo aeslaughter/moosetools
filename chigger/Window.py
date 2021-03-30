@@ -26,8 +26,8 @@ class Window(base.ChiggerAlgorithm):
     __CHIGGER_CURRENT__ = None
 
     @staticmethod
-    def validOptions():
-        opt = base.ChiggerAlgorithm.validOptions()
+    def validParams():
+        opt = base.ChiggerAlgorithm.validParams()
 
         opt.add('size', default=(1920, 1080), vtype=int, size=2,
                 doc="The size of the window, expects a list of two items")
@@ -50,7 +50,7 @@ class Window(base.ChiggerAlgorithm):
                 doc="Number of antialiasing frames to perform (set vtkRenderWindow::SetAAFrames).")
 
         # Background settings
-        opt += utils.BackgroundOptions.validOptions()
+        opt += utils.BackgroundParams.validParams()
         opt.set('background', dict(color=utils.Color(0,0,0)))
 
         # Writer settings
@@ -177,11 +177,11 @@ class Window(base.ChiggerAlgorithm):
         # Viewport Layers
         n = self.__vtkwindow.GetNumberOfLayers()
         for view in self.__viewports:
-            n = max(n, view.getOption('layer') + 1)
+            n = max(n, view.getParam('layer') + 1)
         self.__vtkwindow.SetNumberOfLayers(n)
 
         # Background Setting
-        self.__background.getOption('background').update(self.getOption('background'))
+        self.__background.getParam('background').update(self.getParam('background'))
         self.__background._vtkrenderer.SetBackgroundAlpha(1)
 
         # Auto Background adjustments
@@ -189,9 +189,9 @@ class Window(base.ChiggerAlgorithm):
         utils.auto_adjust_color(self, children)
 
         # Interactive/Observer settings
-        if self.getOption('offscreen'):
+        if self.getParam('offscreen'):
             self.__vtkwindow.OffScreenRenderingOn()
-        #elif not self.getOption('interactive'):
+        #elif not self.getParam('interactive'):
         #    self.__vtkinteractorstyle = vtk.vtkInteractorStyleUser()
         else:
             # TODO: Restore 2D option for 3D objects in plane
@@ -217,19 +217,19 @@ class Window(base.ChiggerAlgorithm):
 
 
             # Add/remove the default MainWindowObserver
-            if self.getOption('observer') and (self.__observer is None):
+            if self.getParam('observer') and (self.__observer is None):
                 self.__observer = observers.MainWindowObserver(window=self)
-            elif (not self.getOption('observer')) and (self.__observer is not None):
+            elif (not self.getParam('observer')) and (self.__observer is not None):
                 del self.__observer
                 self.__observer = None
 
         # vtkRenderWindow Settings
-        self.assignOption('offscreen', self.__vtkwindow.SetOffScreenRendering)
-        self.assignOption('smoothing', self.__vtkwindow.SetLineSmoothing)
-        self.assignOption('smoothing', self.__vtkwindow.SetPolygonSmoothing)
-        self.assignOption('smoothing', self.__vtkwindow.SetPointSmoothing)
-        self.assignOption('multisamples', self.__vtkwindow.SetMultiSamples)
-        self.assignOption('size', self.__vtkwindow.SetSize)
+        self.assignParam('offscreen', self.__vtkwindow.SetOffScreenRendering)
+        self.assignParam('smoothing', self.__vtkwindow.SetLineSmoothing)
+        self.assignParam('smoothing', self.__vtkwindow.SetPolygonSmoothing)
+        self.assignParam('smoothing', self.__vtkwindow.SetPointSmoothing)
+        self.assignParam('multisamples', self.__vtkwindow.SetMultiSamples)
+        self.assignParam('size', self.__vtkwindow.SetSize)
 
 
 
@@ -265,11 +265,11 @@ class Window(base.ChiggerAlgorithm):
         Writes the VTKWindow to an image.
         """
         self.debug('write')
-        self.setOptions(**kwargs)
+        self.setParams(**kwargs)
         self.updateInformation()
         self.updateData()
 
-        filename = self.getOption('filename')
+        filename = self.getParam('filename')
 
         # Allowed extensions and the associated readers
         writers = dict()
@@ -296,7 +296,7 @@ class Window(base.ChiggerAlgorithm):
         window_filter.SetInput(self.__vtkwindow)
 
         # Allow the background to be transparent
-        if self.getOption('transparent'):
+        if self.getParam('transparent'):
             window_filter.SetInputBufferTypeToRGBA()
 
         self.__vtkwindow.Render()

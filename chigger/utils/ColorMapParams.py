@@ -15,17 +15,17 @@ from matplotlib import cm
 import matplotlib.pyplot as plt
 import numpy as np
 import mooseutils
-from .Options import Options
+from .ChiggerInputParameters import ChiggerInputParameters
 
 
 
 # TODO: UseAboveRangeColorOn ()
 
-def validOptions():
+def validParams():
     """Return options for color maps creation"""
-    opt = Options()
+    opt = ChiggerInputParameters()
 
-    cmap = Options()
+    cmap = ChiggerInputParameters()
     cmap.add('name', vtype=str, doc="The colormap name.")
     cmap.add('reverse', default=False, vtype=bool,
             doc="Reverse the order of colormap.")
@@ -36,10 +36,10 @@ def validOptions():
     cmap.add('above', vtype=(int, float), size=4, doc="Above out-of-range color (R,G,B, alpha)")
     cmap.add('below', vtype=(int, float), size=4, doc="Below out-of-range color (R,G,B, alpha)")
     cmap.add('nan', vtype=(int, float), size=4, doc="NaN out-of-range color (R,G,B, alpha)")
-    opt.add('cmap', default=cmap, vtype=Options, doc='Color map options')
+    opt.add('cmap', default=cmap, vtype=Params, doc='Color map options')
     return opt
 
-def applyOptions(opt):
+def applyParams(opt):
     """
     Applies color map options and returns a vtk.vtkTable for use
     """
