@@ -61,7 +61,7 @@ class MainWindowObserver(ChiggerObserver, utils.KeyBindingMixin):
 
         # Disable interaction by default, but honor user specified interaction
         for viewport in self.getViewports():
-            v_i = viewport.getParam('interactive') if viewport.options().isSetByUser('interactive') else False
+            v_i = viewport.getParam('interactive') if viewport.parameters().isSetByUser('interactive') else False
             v_h = viewport.getParam('highlight') if viewport.parameters().isSetByUser('highlight') else v_i
             viewport.setParams(highlight=v_h, interactive=v_i)
 

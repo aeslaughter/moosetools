@@ -56,6 +56,7 @@ class ChiggerParameter(parameters.Parameter):
             val = weakref.ref(val)
 
         old_value = self._Parameter__value
-        parameters.Parameter.setValue(self, val)
+        ret, err = parameters.Parameter.setValue(self, val)
         if old_value != self._Parameter__value:
             self.__modified.Modified()
+        return ret, err

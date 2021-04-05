@@ -249,7 +249,6 @@ class TestObserver(ChiggerObserver):
         return 0, None
 
     def _setObjectParams(self, obj, *args, **kwargs):
-        print(self._setObjectParams)
         obj.setParams(*args, **kwargs)
         self._window.render()
         self._window.resetClippingRange()

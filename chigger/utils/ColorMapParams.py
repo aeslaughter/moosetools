@@ -36,7 +36,7 @@ def validParams():
     cmap.add('above', vtype=(int, float), size=4, doc="Above out-of-range color (R,G,B, alpha)")
     cmap.add('below', vtype=(int, float), size=4, doc="Below out-of-range color (R,G,B, alpha)")
     cmap.add('nan', vtype=(int, float), size=4, doc="NaN out-of-range color (R,G,B, alpha)")
-    opt.add('cmap', default=cmap, vtype=Params, doc='Color map options')
+    opt.add('cmap', default=cmap, vtype=ChiggerInputParameters, doc='Color map options')
     return opt
 
 def applyParams(opt):

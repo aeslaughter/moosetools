@@ -41,8 +41,8 @@ class KeyBindingMixin(object):
     """
     @staticmethod
     def validParams():
-        from . import Params
-        opt = Params()
+        from .ChiggerInputParameters import ChiggerInputParameters
+        opt = ChiggerInputParameters()
         return opt
 
     @staticmethod

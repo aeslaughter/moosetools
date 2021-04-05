@@ -10,7 +10,7 @@ class Outline(GeometricSource):
     @staticmethod
     def validParams():
         opt = GeometricSource.validParams()
-        opt.add('color', vtype=utils.AutoColor, doc="The color of the outline")
+        opt.add('color', vtype=(utils.Color, utils.AutoColor), doc="The color of the outline")
         opt.add('linewidth', vtype=(int, float), doc="The linewidth for the outline")
         opt.add('xmin', default=0, vtype=(int, float),
                 doc="Minimum x-value in 3D renderer coordinates.")
@@ -47,7 +47,7 @@ class Outline2D(GeometricSource2D):
     @staticmethod
     def validParams():
         opt = GeometricSource2D.validParams()
-        opt.add('color', vtype=utils.AutoColor, doc="The color of the outline")
+        opt.add('color', vtype=(utils.Color, utils.AutoColor), doc="The color of the outline")
         opt.add('linewidth', vtype=(int, float), doc="The linewidth for the outline")
         opt.add('xmin', default=0, vtype=(int, float),
                 doc="Minimum x-value in relative viewport coordinates.")
