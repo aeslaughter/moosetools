@@ -32,9 +32,9 @@ def applyParams(viewport, opt):
     """
     opt.assign('opacity', viewport.SetBackgroundAlpha)
     if opt.isValid('color'):
-        viewport.SetBackground(*opt.get('color').rgb())
+        viewport.SetBackground(*opt.getValue('color').rgb())
     if opt.isValid('color2'):
-        viewport.SetBackground2(*opt.get('color2').rgb())
+        viewport.SetBackground2(*opt.getValue('color2').rgb())
         viewport.SetGradientBackground(True)
     else:
         viewport.SetGradientBackground(False)

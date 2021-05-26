@@ -31,19 +31,19 @@ class TestParams(unittest.TestCase):
         self.assertEqual(opts.keys(), ['foo'])
         self.assertFalse(opts.isValid('foo'))
         self.assertIn('foo', opts)
-        self.assertIsNone(opts.get('foo'))
-        self.assertTrue(opts.hasOption('foo'))
+        self.assertIsNone(opts.getValue('foo'))
+        self.assertTrue(opts.hasParameter('foo'))
 
     def testSet(self):
         opts = Params()
         opts.add('foo')
-        opts.set('foo', 42)
+        opts.setValue('foo', 42)
         self.assertEqual(opts.keys(), ['foo'])
         self.assertTrue(opts.isValid('foo'))
         self.assertIn('foo', opts)
-        self.assertIsNotNone(opts.get('foo'))
-        self.assertEqual(opts.get('foo'), 42)
-        self.assertTrue(opts.hasOption('foo'))
+        self.assertIsNotNone(opts.getValue('foo'))
+        self.assertEqual(opts.getValue('foo'), 42)
+        self.assertTrue(opts.hasParameter('foo'))
 
     def testModified(self):
         opts = Params()
@@ -51,7 +51,7 @@ class TestParams(unittest.TestCase):
         self.assertTrue(opts.modified())
         self.assertEqual(opts.applyOption('foo'), 42)
         self.assertFalse(opts.modified())
-        opts.set('foo', 43)
+        opts.setValue('foo', 43)
         self.assertTrue(opts.modified())
         self.assertEqual(opts.applyOption('foo'), 43)
         self.assertFalse(opts.modified())
@@ -63,7 +63,7 @@ class TestParams(unittest.TestCase):
         opts = Params()
         opts.add('foo', sub_opts)
 
-        opts.set('foo', {'bar', 43})
+        opts.setValue('foo', {'bar', 43})
 
 if __name__ == '__main__':
     unittest.main(module=__name__, verbosity=2, buffer=True, exit=False)

@@ -28,7 +28,7 @@ class Axis2D(base.ChiggerSource):
         opt = base.ChiggerSource.validParams()
 
         # Axis Line Params
-        opt.set('linewidth', 1)
+        opt.setValue('linewidth', 1)
 
         # Title and label Params
         # This object includes general properties ('fontcolor', 'fontopacity', ...) as well as
@@ -44,9 +44,9 @@ class Axis2D(base.ChiggerSource):
 
         #opt += utils.TextParams.validParams(prefix='title', unset=True)
         #opt += utils.TextParams.validParams(prefix='label', unset=True)
-        #opt.set('fontcolor', None)
-        #opt.set('fontopacity', None)
-        #opt.set('fontitalic', False)
+        #opt.setValue('fontcolor', None)
+        #opt.setValue('fontopacity', None)
+        #opt.setValue('fontitalic', False)
 
         # Position
         opt.add('point1', vtype=(int, float), size=2, doc="The starting position, in relative viewport coordinates, of the axis line.")
@@ -100,17 +100,17 @@ class Axis2D(base.ChiggerSource):
 
         # The default font color and opacity should match the 'color' and 'opactity' options
         #if not self.isValid('fontcolor'):
-        #    self._parameters.set('fontcolor', self.getParam('color'))
+        #    self._parameters.setValue('fontcolor', self.getParam('color'))
 
         #if not self.isValid('fontopacity'):
-        #    self._parameters.set('fontopacity', self.getParam('opacity'))
+        #    self._parameters.setValue('fontopacity', self.getParam('opacity'))
 
         # Set the values of the title_
         for name in self.__TEXTKEYS__:
             for subname in ['title', 'label']:
                 tname = '{}_{}'.format(subname, name)
                 if not self.isParamValid(tname):
-                    self._parameters.set(tname, self._parameters.get(name))
+                    self._parameters.setValue(tname, self._parameters.getValue(name))
 
         utils.TextParams.applyParams(self._vtkactor.GetTitleTextProperty(), self._parameters, 'title')
         utils.TextParams.applyParams(self._vtkactor.GetLabelTextProperty(), self._parameters, 'label')

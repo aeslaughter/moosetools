@@ -44,7 +44,7 @@ class Graph(base.ChiggerResultBase):
 
         # Remove position from axis options, it should not be available b/c this is set by the graph
         for ax in ['xaxis', 'yaxis', 'x2axis', 'y2axis']:
-            opt.get(ax).remove('axis_position')
+            opt.getValue(ax).remove('axis_position')
 
         return opt
 
@@ -90,7 +90,7 @@ class Graph(base.ChiggerResultBase):
             for sub_opt in ['xaxis', 'yaxis', 'x2axis', 'y2axis', 'legend']:
                 opt = self.getParam(sub_opt)
                 if not opt.isValid('font_size'):
-                    opt.set('font_size', fz)
+                    opt.setValue('font_size', fz)
 
         # Update Axis options
         self._setAxisParams(self._vtkchart.GetAxis(vtk.vtkAxis.BOTTOM), self.getParam('xaxis'))

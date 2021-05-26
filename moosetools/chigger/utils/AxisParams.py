@@ -111,7 +111,7 @@ def setParams(vtkaxis, opt): #pylint: disable=invalid-name
 
     # Color
     if opt.isValid('fontcolor'):
-        clr = opt.get('fontcolor')
+        clr = opt.getValue('fontcolor')
         vtkaxis.GetTitleProperties().SetColor(*clr)
         vtkaxis.GetLabelProperties().SetColor(*clr)
         vtkaxis.GetPen().SetColorF(*clr)

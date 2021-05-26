@@ -25,7 +25,7 @@ def applyParams(vtkactor, opt):
     vtkactor.RotateZ(z)
     """
 
-    vtkactor.GetProperty().SetEdgeVisibility(opt.get('visible'))
-    vtkactor.GetProperty().SetEdgeColor(opt.get('color'))
-    vtkactor.GetProperty().SetLineWidth(opt.get('width'))
-    vtkactor.GetProperty().SetPointSize(opt.get('size'))
+    vtkactor.GetProperty().SetEdgeVisibility(opt.getValue('visible'))
+    vtkactor.GetProperty().SetEdgeColor(opt.getValue('color'))
+    vtkactor.GetProperty().SetLineWidth(opt.getValue('width'))
+    vtkactor.GetProperty().SetPointSize(opt.getValue('size'))

@@ -73,7 +73,7 @@ class ChiggerObjectBase(base.MooseObject):
             setParam('date_year', 1980)    # 'date' is an InputParameters object
         """
         #self.debug('setParam')
-        self._parameters.set(*args)
+        self._parameters.setValue(*args)
 
     def setParams(self, *args, **kwargs):
         """

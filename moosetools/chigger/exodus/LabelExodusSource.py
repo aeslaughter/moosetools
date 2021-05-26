@@ -32,8 +32,8 @@ class LabelExodusSource(base.ChiggerSource2D):
         opt.add('label_type', default='variable', vtype=str,
                 doc="Specify the type of label to create.",
                 allow=('point', 'cell', 'variable'))
-        opt.set('justification', 'center')
-        opt.set('vertical_justification', 'middle')
+        opt.setValue('justification', 'center')
+        opt.setValue('vertical_justification', 'middle')
         return opt
 
     def __init__(self, exodus_source, **kwargs):

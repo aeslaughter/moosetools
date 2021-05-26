@@ -28,7 +28,7 @@ class Time(TextBase):
         opt.add('microseconds', vtype=(int, float), default=0, doc="The number of microseconds.")
         opt.add('milliseconds', vtype=(int, float), default=0, doc="The number of milliseconds.")
 
-        opt.set('position', (0.01, 0.01))
+        opt.setValue('position', (0.01, 0.01))
         return opt
 
     def _onRequestInformation(self, *args):

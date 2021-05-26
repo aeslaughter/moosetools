@@ -24,8 +24,8 @@ class ExodusColorBar(misc.ColorBar):
     @staticmethod
     def validParams():
         opt = misc.ColorBar.validParams()
-        opt.set('viewport', None)
-        opt.set('layer', None)
+        opt.setValue('viewport', None)
+        opt.setValue('layer', None)
         return opt
 
     def __init__(self, *results, **kwargs):
@@ -72,9 +72,9 @@ class ExodusColorBar(misc.ColorBar):
 
         def set_axis_params_helper(ax, result): #pylint: disable=invalid-name
             """Helper for setting axis params."""
-            ax.set('lim', result[0].getVTKMapper().GetScalarRange())
-            if ax.get('title') is None:
-                ax.set('title', result[0].getVTKMapper().GetArrayName())
+            ax.setValue('lim', result[0].getVTKMapper().GetScalarRange())
+            if ax.getValue('title') is None:
+                ax.setValue('title', result[0].getVTKMapper().GetArrayName())
 
         # Primary
         if n > 0:
@@ -83,7 +83,7 @@ class ExodusColorBar(misc.ColorBar):
         # Secondary
         if n == 2:
             set_axis_params_helper(secondary, self._results[1])
-            secondary.set('visible', True)
+            secondary.setValue('visible', True)
 
         self.setParam('primary', primary)
         self.setParam('secondary', secondary)

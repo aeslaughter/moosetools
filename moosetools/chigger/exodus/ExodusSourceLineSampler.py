@@ -22,8 +22,8 @@ class ExodusSourceLineSampler(geometric.LineSource):
     @staticmethod
     def validParams():
         opt = geometric.LineSource.validParams()
-        opt.set('point1', None)
-        opt.set('point2', None)
+        opt.setValue('point1', None)
+        opt.setValue('point2', None)
         return opt
 
     def __init__(self, exodus_source, **kwargs):

@@ -70,13 +70,13 @@ def applyParams(actor, viewport, tprop, opt):
 
 
     # FONT
-    font = opt.get('font')
+    font = opt.getValue('font')
     if font.isValid('color'):
-        tprop.SetColor(font.get('color').rgb())
+        tprop.SetColor(font.getValue('color').rgb())
     font.assign('opacity', tprop.SetOpacity)
     font.assign('italic', tprop.SetItalic)
     font.assign('bold', tprop.SetBold)
-    family = font.get('family')
+    family = font.getValue('family')
     if family == 'arial':
         tprop.SetFontFamilyToArial()
     elif family == 'courier':
@@ -102,20 +102,20 @@ def applyParams(actor, viewport, tprop, opt):
     view_pixels = viewport.GetSize()
     w = font_pixels[0] / view_pixels[0]
     h = font_pixels[1] / view_pixels[1]
-    scale = font.get('size') / h
+    scale = font.getValue('size') / h
 
     # Apply scaled size and rotation
     tprop.SetFontSize(int(scale*size))
-    tprop.SetOrientation(opt.get('rotate'))
+    tprop.SetOrientation(opt.getValue('rotate'))
 
     # FRAME
-    frame = opt.get('frame')
+    frame = opt.getValue('frame')
     frame.assign('on', tprop.SetFrame)
     frame.assign('color', tprop.SetFrameColor)
     frame.assign('width', tprop.SetFrameWidth)
 
     # BACKGROUND
-    bg = opt.get('background')
+    bg = opt.getValue('background')
     if bg.isValid('color'):
         bg.assign('color', tprop.SetBackgroundColor)
         bg.assign('opacity', tprop.SetBackgroundOpacity)
@@ -124,7 +124,7 @@ def applyParams(actor, viewport, tprop, opt):
 
     opt.assign('rotate', tprop.SetOrientation)
 
-    halign = opt.get('halign')
+    halign = opt.getValue('halign')
     if halign == 'left':
         tprop.SetJustificationToLeft()
     if halign == 'center':
@@ -132,7 +132,7 @@ def applyParams(actor, viewport, tprop, opt):
     if halign == 'right':
         tprop.SetJustificationToRight()
 
-    valign = opt.get('valign')
+    valign = opt.getValue('valign')
     if valign == 'bottom':
         tprop.SetVerticalJustificationToBottom()
     if valign == 'center':

@@ -41,7 +41,7 @@ class ChiggerInputParameters(parameters.InputParameters):
         """
         Return a dict() from the supplied keys
         """
-        return {k:self.get(k) for k,v in self.items()}
+        return {k:self.getValue(k) for k,v in self.items()}
 
     def toScript(self, **kwargs):
         """
@@ -55,7 +55,7 @@ class ChiggerInputParameters(parameters.InputParameters):
         output = []
         sub_output = dict()
         for key in self.keys():
-            opt = self.get(key)
+            opt = self.getValue(key)
 
             if isinstance(opt, Params):
                 items, _ = opt.toScript()
@@ -75,7 +75,7 @@ class ChiggerInputParameters(parameters.InputParameters):
         output = []
         sub_output = dict()
         for key in self.keys():
-            opt = self.get(key)
+            opt = self.getValue(key)
 
             if isinstance(opt, ChiggerInputParameters):
                 items, _ = opt.getNonDefaultParams()

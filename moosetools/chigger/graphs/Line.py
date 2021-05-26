@@ -126,8 +126,8 @@ class Line(base.ChiggerObject):
         # Get the x,y data and reset to None so that data doesn't append over and over
         x = self.getParam('x')
         y = self.getParam('y')
-        self._parameters.set('x', None)
-        self._parameters.set('y', None)
+        self._parameters.setValue('x', None)
+        self._parameters.setValue('y', None)
         if (x and y) and (len(x) == len(y)):
             for i in range(len(x)): #pylint: disable=consider-using-enumerate
                 array = vtk.vtkVariantArray()

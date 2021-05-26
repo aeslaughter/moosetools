@@ -49,8 +49,8 @@ def create(base_type):
                     doc="The VTK data to attach to the vtkMapper for this object, for used with " \
                         "the 'cmap' option.")
             opt += ColorMap.validParams()
-           # opt.set('color', None)
-            opt.set('cmap', None)
+           # opt.setValue('color', None)
+            opt.setValue('cmap', None)
             return opt
 
         def __init__(self, **kwargs):

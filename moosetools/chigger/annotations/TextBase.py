@@ -61,8 +61,8 @@ class TextBase(Annotation):
 
     def _incrementFont(self, delta):
         font = self.getParam('font')
-        sz = font.get('size') + delta
-        font.set(size=sz)
+        sz = font.getValue('size') + delta
+        font.setValue(size, sz)
         self.printOption('font')
 
     def _incrementAlpha(self, delta):
@@ -73,7 +73,6 @@ class TextBase(Annotation):
 
     def _incrementRotate(self, delta):
         angle = self.getParam('rotate') + delta
-        print(angle)
         if angle > 360:
             angle = angle - 360
         elif angle < 0:

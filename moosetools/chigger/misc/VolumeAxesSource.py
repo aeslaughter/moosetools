@@ -25,7 +25,7 @@ class VolumeAxesSource(base.ChiggerSourceBase):
                 doc="Lower corner of bounding box.")
         opt.add('point2', default=(1, 1, 1), vtype=(int, float), size=3,
                 doc="Upper corner of bounding box.")
-        opt.set('interactive', False)
+        opt.setValue('interactive', False)
         return opt
 
     @staticmethod
@@ -75,13 +75,13 @@ class VolumeAxesSource(base.ChiggerSourceBase):
             return
 
         opt = self.getParam(axis + 'axis')
-        color = opt.get('color')
+        color = opt.getValue('color')
         comp = ['x', 'y', 'z'].index(axis)
         self._vtkactor.GetTitleTextProperty(comp).SetColor(*color)
         self._vtkactor.GetLabelTextProperty(comp).SetColor(*color)
 
         func = getattr(self._vtkactor, 'Set{}AxisMinorTickVisibility'.format(axis.upper()))
-        func(opt.get('minor_ticks'))
+        func(opt.getValue('minor_ticks'))
 
         func = getattr(self._vtkactor, 'Get{}AxesLinesProperty'.format(axis.upper()))
         func().SetColor(*color)

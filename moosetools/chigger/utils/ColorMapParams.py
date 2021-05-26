@@ -46,14 +46,14 @@ def applyParams(opt):
     lut = vtk.vtkLookupTable()
 
     if not opt.isValid('name'):
-        hue = (0., 0.667) if opt.get('reverse') else (0.667, 0.)
+        hue = (0., 0.667) if opt.getValue('reverse') else (0.667, 0.)
         lut.SetHueRange(*hue)
     else:
-        name = opt.get('name')
-        n = opt.get('resolution')
+        name = opt.getValue('name')
+        n = opt.getValue('resolution')
         points = np.linspace(0, 1, n)
         cmap = getattr(cm, name)(points)
-        rng = reversed(range(n)) if opt.get('reverse') else range(n)
+        rng = reversed(range(n)) if opt.getValue('reverse') else range(n)
         for i, r in enumerate(rng):
             lut.SetTableValue(i, *cmap[r])
 

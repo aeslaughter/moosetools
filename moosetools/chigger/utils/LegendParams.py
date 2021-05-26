@@ -58,7 +58,7 @@ def setParams(vtkchart, vtkrenderer, opt): #pylint: disable=invalid-name
         legend.SetLabelSize(opt.applyOption('font_size'))
 
     if opt.isValid('point'):
-        pt = opt.get('point')
+        pt = opt.getValue('point')
         legend.SetVerticalAlignment(vtk.vtkChartLegend.CUSTOM)
         legend.SetHorizontalAlignment(vtk.vtkChartLegend.CUSTOM)
 
@@ -69,11 +69,11 @@ def setParams(vtkchart, vtkrenderer, opt): #pylint: disable=invalid-name
         legend.SetPoint(*loc)
     else:
         legend.SetVerticalAlignment(eval('vtk.vtkChartLegend.' +
-                                         opt.get('vertical_alignment').upper()))
+                                         opt.getValue('vertical_alignment').upper()))
         legend.SetHorizontalAlignment(eval('vtk.vtkChartLegend.' +
-                                           opt.get('horizontal_alignment').upper()))
+                                           opt.getValue('horizontal_alignment').upper()))
 
-    if opt.get('border'):
+    if opt.getValue('border'):
         if opt.isValid('border_color'):
             legend.GetPen().SetColorF(opt.applyOption('border_color'))
         if opt.isValid('border_width'):
