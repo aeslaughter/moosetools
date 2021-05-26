@@ -8,6 +8,7 @@
 #* https://www.gnu.org/licenses/lgpl-2.1.html
 
 from . import base
+from . import chigger
 from . import diff
 from . import factory
 from . import mms

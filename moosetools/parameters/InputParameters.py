@@ -13,7 +13,6 @@ import enum
 import logging
 import copy
 
-import mooseutils
 from .Parameter import Parameter
 
 
