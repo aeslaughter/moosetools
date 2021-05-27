@@ -17,7 +17,7 @@ class ChiggerFilter(chigger.base.ChiggerAlgorithm):
 
     def __init__(self, **kwargs):
         kwargs['name'] = self.FILTERNAME if self.FILTERNAME is not None else self.__class__.__name__.lower()
-        base.ChiggerAlgorithm.__init__(self, **kwargs)
+        chigger.base.ChiggerAlgorithm.__init__(self, **kwargs)
 
         self._vtkfilter = self.VTKFILTERTYPE()
 

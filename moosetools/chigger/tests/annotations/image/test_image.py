@@ -7,7 +7,7 @@
 #*
 #* Licensed under LGPL 2.1, please see LICENSE for details
 #* https://www.gnu.org/licenses/lgpl-2.1.html
-import chigger
+from moosetools import chigger
 
 class TestImage(chigger.base.ChiggerTestCase):
     def setUp(self):

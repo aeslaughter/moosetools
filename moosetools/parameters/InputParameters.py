@@ -40,6 +40,8 @@ class InputParameters(object):
             doc= "The `MooseObject` that the InputParameter object belongs, if provided the error " \
                  "logging will log via the `MooseObject`."
         )
+
+        # TODO: setting error_mode should be a method so that it propagates to sub-params
         self.add('error_mode',
                  default=InputParameters.ErrorMode.EXCEPTION,
                  vtype=InputParameters.ErrorMode)

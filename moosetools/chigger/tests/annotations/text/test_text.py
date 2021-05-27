@@ -7,7 +7,7 @@
 #*
 #* Licensed under LGPL 2.1, please see LICENSE for details
 #* https://www.gnu.org/licenses/lgpl-2.1.html
-import chigger
+from moosetools import chigger
 
 class TestFont(chigger.base.ChiggerTestCase):
     def setUp(self):
@@ -48,7 +48,7 @@ class TestFont(chigger.base.ChiggerTestCase):
         self.assertInLog("The supplied size must be in range (0,1]",
                          self._text, kwargs=dict(font_size=1980))
 
-        self.assertInLog("Attempting to set '%s' to a value of",
+        self.assertInLog("Attempting to set 'family' to a value of",
                          self._text, kwargs=dict(font_family='wrong'))
 
 
@@ -180,4 +180,4 @@ class TestMath(chigger.base.ChiggerTestCase):
 
 if __name__ == '__main__':
     import unittest
-    unittest.main(verbosity=2)
+    unittest.main(verbosity=2, buffer=False)

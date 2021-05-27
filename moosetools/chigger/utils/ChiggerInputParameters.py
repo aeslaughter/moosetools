@@ -20,6 +20,10 @@ class ChiggerInputParameters(parameters.InputParameters):
     """
     __PARAM_TYPE__ = ChiggerParameter
 
+    def __init__(self, *args, **kwargs):
+        parameters.InputParameters.__init__(self, *args, **kwargs)
+        self.setValue('error_mode', parameters.InputParameters.ErrorMode.ERROR)
+
     def modified(self):
         """
         Returns the maximum modified time for the Option/Parameter objects

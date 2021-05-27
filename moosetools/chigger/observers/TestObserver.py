@@ -167,7 +167,7 @@ class TestObserver(ChiggerObserver):
         func = formatter.format
         if kwargs is None: kwargs = dict()
         if args is None: args = set()
-        with mock.patch('chigger.ChiggerFormatter.format') as log:
+        with mock.patch('moosetools.chigger.ChiggerFormatter.format') as log:
             log.side_effect = func
             if obj is not None:
                 self._setObjectParams(obj, *args, **kwargs)
@@ -187,7 +187,7 @@ class TestObserver(ChiggerObserver):
     def _assertNotInLog(self, text, obj, key=None, shift=False, **kwargs):
         formatter = chigger.ChiggerFormatter()
         func = formatter.format
-        with mock.patch('chigger.ChiggerFormatter.format') as log:
+        with mock.patch('moosetools.chigger.ChiggerFormatter.format') as log:
             #log.side_effect = func
             if obj is not None:
                 self._setObjectParams(obj, **kwargs)

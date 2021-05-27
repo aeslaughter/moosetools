@@ -13,6 +13,7 @@ import vtk
 import logging
 import traceback
 import inspect
+from moosetools import parameters
 from moosetools import mooseutils
 from moosetools import base
 
@@ -53,11 +54,10 @@ class ChiggerObjectBase(base.MooseObject):
             allow=levels,
             doc="Set the allowable logging level for the status method to return an error code.")
 
-
         return params
 
-    def __init__(self, **kwargs):
-        base.MooseObject.__init__(self, **kwargs)
+    def __init__(self, *args, **kwargs):
+        base.MooseObject.__init__(self, *args, **kwargs)
 
     def setParam(self, *args):
         """

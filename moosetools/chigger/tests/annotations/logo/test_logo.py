@@ -7,13 +7,8 @@
 #*
 #* Licensed under LGPL 2.1, please see LICENSE for details
 #* https://www.gnu.org/licenses/lgpl-2.1.html
-import chigger
 import unittest
-
-#chigger.annotations.Logo(logo='inl', position=(0.5, 0.5), width=0.33, halign='center', valign='center')
-#chigger.annotations.Logo(logo='moose', position=(0, 0), width=0.33, halign='left', valign='bottom')
-#chigger.annotations.Logo(logo='chigger_white', position=(1., 0.), width=0.33, halign='right', valign='bottom')
-
+from moosetools import chigger
 
 class TestLogo(chigger.base.ChiggerTestCase):
     def setUp(self):
