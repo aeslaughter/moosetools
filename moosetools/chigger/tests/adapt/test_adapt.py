@@ -20,7 +20,7 @@ class TestAdapt(chigger.base.ChiggerTestCase):
         for i in [0,4,9]:
             filename = 'adapt_' + str(i) + '.png'
             self.setObjectParams(self._reader, timestep=i)
-            self.assertImage(filename)
+            self.assertImage(filename, threshold=10)
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

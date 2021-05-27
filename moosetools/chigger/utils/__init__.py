@@ -48,6 +48,8 @@ def get_active_filenames(basename, pattern=None):
         filenames += glob.glob(pattern)
     filenames.sort()
 
+    print(filenames)
+
     # Minimum filename modified time
     modified = os.path.getmtime(filenames[0]) if os.path.exists(filenames[0]) else 0
 

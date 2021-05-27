@@ -36,6 +36,5 @@ class Time(TextBase):
         Converts timestamp to a text string for display. (override)
         """
         td = datetime.timedelta(**{k:self.getParam(k) for k in ['weeks', 'days', 'hours', 'minutes', 'seconds', 'microseconds', 'milliseconds']})
-        print(self.getParam('weeks'), self.getParam('seconds'))
         self._vtkactor.SetInput(str(td))
         TextBase._onRequestInformation(self, *args)
