@@ -41,8 +41,8 @@ class InputParameters(object):
                  "logging will log via the `MooseObject`."
         )
 
-        # TODO: setting error_mode should be a method so that it propagates to sub-params
-        self.add('error_mode',
+        # 'setErrorMode' method should be used in favor of this so it propagates to sub-parameters
+        self.add('_error_mode', private=True,
                  default=InputParameters.ErrorMode.EXCEPTION,
                  vtype=InputParameters.ErrorMode)
 
@@ -90,6 +90,15 @@ class InputParameters(object):
         for key in params.keys():
             self.__parameters[key] = params._InputParameters__parameters[key]
         return self
+
+    def setErrorMode(self, mode):
+        """
+        Set the error method to the *mode* provided.
+        """
+        self.setValue('_error_mode', mode)
+        for param in self.__parameters.items():
+            if isinstance(param, InputParameters):
+                param.setValue('_error_mode', mode)
 
     def parameter(self, *args):
         """
@@ -348,7 +357,7 @@ class InputParameters(object):
         Produce warning, error, or exception based on operation mode.
         """
         msg = text.format(*args, **kwargs)
-        mode = self.getValue('error_mode')
+        mode = self.getValue('_error_mode')
         log = self.getValue('_moose_object') or logging.getLogger(__name__)
         if mode == InputParameters.ErrorMode.WARNING:
             log.warning(msg)

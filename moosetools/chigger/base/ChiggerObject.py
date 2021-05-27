@@ -58,6 +58,7 @@ class ChiggerObjectBase(base.MooseObject):
 
     def __init__(self, *args, **kwargs):
         base.MooseObject.__init__(self, *args, **kwargs)
+        self.parameters().setErrorMode(parameters.InputParameters.ErrorMode.ERROR)
 
     def setParam(self, *args):
         """
