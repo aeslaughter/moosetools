@@ -2,11 +2,12 @@ from .ChiggerObject import ChiggerObject
 from .. import utils
 
 class ChiggerCompositeSource(utils.KeyBindingMixin, ChiggerObject):
-
     @staticmethod
     def validParams():
         opt = ChiggerObject.validParams()
         opt += utils.KeyBindingMixin.validParams()
+        opt.add('viewport', default=utils.get_current_viewport(), required=True,
+                doc='The chigger.Viewport object that the sources are to be associated')
         return opt
 
     @staticmethod
@@ -15,22 +16,33 @@ class ChiggerCompositeSource(utils.KeyBindingMixin, ChiggerObject):
         return bindings
 
     def __init__(self, *args, **kwargs):
-        self._sources = list()
-        for src in args:
-            self._addSource(src)
         ChiggerObject.__init__(self, **kwargs)
+        self._sources = list()
+
+    @property
+    def _viewport(self):
+        """Property so that self._viewport acts like the actual Viewport object."""
+        return self.getParam('viewport')
 
     def _addSource(self, src):
-        #TODO: check src type
-
+        self._viewport.add(src)
         self._sources.append(src)
 
-    def applyParams(self):
-        ChiggerObject.applyParams(self)
+    def setParam(self, *args):
         for src in self._sources:
-            src.applyParams()
+            src.setParam(*args)
 
+    def setParams(self, *args, **kwargs):
+        for src in self._sources:
+            src.setParams(*args, **kwargs)
+
+    def assignParam(self, *args):
+        for src in self._sources:
+            src.assignParam(*args)
+
+    """
     def getVTKActors(self):
         for src in self._sources:
             if src.getVTKActor() is not None:
                 yield src.getVTKActor()
+    """

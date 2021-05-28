@@ -41,7 +41,7 @@ class ChiggerInputParameters(parameters.InputParameters):
         """
         Return a dict() from the supplied keys
         """
-        return {k:self.getValue(k) for k,v in self.items()}
+        return {k:self.getValue(k) for k,v in self.items() if v is not None}
 
     def toScript(self, **kwargs):
         """

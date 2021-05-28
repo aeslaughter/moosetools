@@ -111,7 +111,7 @@ class TestObserver(ChiggerObserver):
         if shift is None: shift = self.getParam('shift')
 
         # Write the current window to file
-        self._window.write(filename=filename)
+        self._window.write(imagename=filename)
 
         # Read the gold file, and err if not found
         goldname = goldname or os.path.join(os.path.dirname(filename), 'gold', os.path.basename(filename))

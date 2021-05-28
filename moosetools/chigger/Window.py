@@ -38,7 +38,7 @@ class Window(base.ChiggerAlgorithm):
         #        doc="The interaction style ('interactive' enables 3D interaction, 'interactive2D' "\
         #            "disables out-of-plane interaction, and 'modal' disables all interaction.")
 
-        opt.add('offscreen', default='--offscreen' in sys.argv, vtype=bool,
+        opt.add('offscreen', default=False, vtype=bool,
                 doc="Enable offscreen rendering.")
 
         #opt.add('chigger', False, "Places a chigger logo in the lower left corner.") #TODO
@@ -54,8 +54,7 @@ class Window(base.ChiggerAlgorithm):
         opt.setValue('background', dict(color=utils.Color(0,0,0)))
 
         # Writer settings
-        #TODO: imagename ?
-        opt.add('filename', vtype=str, doc="The output image filename for the write command.")
+        opt.add('imagename', vtype=str, doc="The output image filename for the write command.")
         opt.add('transparent', default=False, vtype=bool,
                 doc="When True images created will use a transparent background during image creation")
 
@@ -79,7 +78,7 @@ class Window(base.ChiggerAlgorithm):
         # The interaction settings are tricky in VTK. The vtkInteractorStyle object calls
         # FindPokedRender, which always returns something regardless of the individual
         # vtkRenderer::SetInteractive settings. To get around this problem this background layer
-        # is setup and serves as a fallback vtkRenderer object of all others are off.
+        # is setup and serves as a fallback vtkRenderer object if all others are off.
         #
         # https://vtk.org/pipermail/vtkusers/2018-June/102030.html
         self.__background = Background(window=self)
@@ -195,9 +194,10 @@ class Window(base.ChiggerAlgorithm):
         #    self.__vtkinteractorstyle = vtk.vtkInteractorStyleUser()
         else:
             # TODO: Restore 2D option for 3D objects in plane
-            self.__vtkinteractorstyle = vtk.vtkInteractorStyleJoystickCamera()
-            self.__vtkinteractor.SetInteractorStyle(self.__vtkinteractorstyle)
-            self.__vtkinteractor.RemoveObservers(vtk.vtkCommand.CharEvent)
+            if self.__vtkinteractorstyle is None:
+                self.__vtkinteractorstyle = vtk.vtkInteractorStyleJoystickCamera()
+                self.__vtkinteractor.SetInteractorStyle(self.__vtkinteractorstyle)
+                self.__vtkinteractor.RemoveObservers(vtk.vtkCommand.CharEvent)
 
 
             # TODO: Create  object in constructor, just setup things here based on 'style'
@@ -269,7 +269,7 @@ class Window(base.ChiggerAlgorithm):
         self.updateInformation()
         self.updateData()
 
-        filename = self.getParam('filename')
+        filename = self.getParam('imagename')
 
         # Allowed extensions and the associated readers
         writers = dict()

@@ -103,16 +103,9 @@ class Viewport(utils.KeyBindingMixin, base.ChiggerAlgorithm):
         return self.getParam('window')
 
     def add(self, arg):
-
-        if isinstance(arg, base.ChiggerCompositeSource):
-            for actor in arg.getVTKActors():
-                self._vtkrenderer.AddActor(actor)
-
-        else:
-            actor = arg.getVTKActor()
-            if actor is not None:
-                self._vtkrenderer.AddActor(actor)
-
+        actor = arg.getVTKActor()
+        if actor is not None:
+            self._vtkrenderer.AddActor(actor)
         self.__sources.append(arg)
 
     def remove(self, arg):
@@ -120,11 +113,7 @@ class Viewport(utils.KeyBindingMixin, base.ChiggerAlgorithm):
 
         if arg in self.__sources:
             self.__sources.remove(arg)
-
-            if isinstance(arg, base.ChiggerCompositeSource):
-                for actor in arg.getVTKActors():
-                    self._vtkrenderer.RemoveActor(actor)
-            elif arg.getVTKActor() is not None:
+            if arg.getVTKActor() is not None:
                 self._vtkrenderer.RemoveActor(arg.getVTKActor())
 
     def updateInformation(self):

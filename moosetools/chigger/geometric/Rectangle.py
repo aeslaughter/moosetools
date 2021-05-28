@@ -12,8 +12,8 @@ class Rectangle(GeometricSource2D):
     def validParams():
         opt = GeometricSource2D.validParams()
         opt += utils.ColorMapParams.validParams()
-        opt.setDefault('cmap', None)
-        opt.add('color', vtype=utils.AutoColor, doc="The color of the rectangle")
+        #opt.setDefault('cmap', None)
+        opt.add('color', vtype=(utils.Color, utils.AutoColor), doc="The color of the rectangle")
 
         opt.add('xmin', default=0, vtype=(int, float), required=True,
                 verify=(lambda v: v>=0 and v<=1, "Value must be in range [0,1]"))
@@ -79,9 +79,10 @@ class Rectangle(GeometricSource2D):
             self._vtksource.GetOutput().GetPointData().SetScalars(pdata)
             self._vtkmapper.SetScalarRange(pdata.GetRange())
 
-        if self.isParamValid('cmap'):
+        if self.isParamValid('color'):
+            self.assignParam('color', self._vtkactor.GetProperty().SetColor)
+        else:
+            print('CMAP')
             cmap = utils.ColorMapParams.applyParams(self.getParam('cmap'))
             self._vtkmapper.SetLookupTable(cmap)
             self._vtkmapper.SetUseLookupTableScalarRange(True)
-        elif self.isParamValid('color'):
-            self.assign('color', self._vtkactor.GetProperty().SetColor)

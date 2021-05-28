@@ -25,8 +25,8 @@ class ChiggerObjectBase(base.MooseObject):
         **kwargs: key/value pairs that are used to update the options defined in the validParams
                   method
     """
-    __LOG_LEVEL__ = dict(critical=logging.CRITICAL, error=logging.ERROR, warning=logging.warning,
-                         info=logging.INFO, debug=logging.DEBUG, notset=logging.NOTSET)
+   # __LOG_LEVEL__ = dict(critical=logging.CRITICAL, error=logging.ERROR, warning=logging.warning,
+   #                      info=logging.INFO, debug=logging.DEBUG, notset=logging.NOTSET)
 
     @staticmethod
     def validParams():

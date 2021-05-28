@@ -34,23 +34,25 @@ class Highlight(GeometricSource, HighlightBase):
 
     def __init__(self, **kwargs):
         GeometricSource.__init__(self, nInputPorts=1, inputType='vtkPolyData', **kwargs)
-        self.SetInputConnection(self.getParam('source').GetOutputPort())
+
+        src = self.getParam('source')
+        self.SetInputDataObject(src.getVTKMapper().GetInput())
 
     def _onRequestInformation(self, *args):
         GeometricSource._onRequestInformation(self, *args)
         HighlightBase._onRequestInformation(self, *args)
 
     def _onRequestData(self, inInfo, outInfo):
-        inp = inInfo[0].GetInformationObject(0).Get(vtk.vtkDataObject.DATA_OBJECT())
-        bnds = list(inp.GetBounds())
+        inObj = inInfo[0].GetInformationObject(0).Get(vtk.vtkDataObject.DATA_OBJECT())
+        bnds = list(inObj.GetBounds())
         offset = self.getParam('offset')
         for i in [1,3,5]:
             dx = bnds[i] - bnds[i-1]
             bnds[i-1] = bnds[i-1] - dx * offset
             bnds[i] = bnds[i] + dx * offset
-
         self._vtksource.SetBounds(bnds)
         GeometricSource._onRequestData(self, inInfo, outInfo)
+
 
 class Highlight2D(GeometricSource2D, HighlightBase):
     VTKSOURCETYPE = vtk.vtkOutlineCornerSource
@@ -62,16 +64,15 @@ class Highlight2D(GeometricSource2D, HighlightBase):
         return opt
 
     def __init__(self, **kwargs):
-        GeometricSource2D.__init__(self, nInputPorts=1, inputType='vtkPolyData', **kwargs)
-        self.SetInputConnection(self.getParam('source').GetOutputPort())
+        GeometricSource2D.__init__(self, nInputPorts=0, inputType='vtkPolyData', **kwargs)
 
     def _onRequestInformation(self, *args):
         GeometricSource2D._onRequestInformation(self, *args)
         HighlightBase._onRequestInformation(self, *args)
 
     def _onRequestData(self, inInfo, outInfo):
-        inp = inInfo[0].GetInformationObject(0).Get(vtk.vtkDataObject.DATA_OBJECT())
-        bnds = list(inp.GetBounds())
+        src = self.getParam('source')
+        bnds = list(src.getVTKMapper().GetInput().GetBounds())
 
         offset = self.getParam('offset')
         for i in [1,3,5]:

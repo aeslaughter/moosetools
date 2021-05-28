@@ -10,7 +10,6 @@ import vtk
 from moosetools import mooseutils
 
 from .ExodusReader import ExodusReader
-from .MultiAppExodusReader import MultiAppExodusReader
 from .. import base
 from .. import utils
 from .. import filters

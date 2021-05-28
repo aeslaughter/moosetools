@@ -106,7 +106,6 @@ class MainWindowObserver(ChiggerObserver, utils.KeyBindingMixin):
         self.setActiveViewport(current)
         self._window.render()
 
-
     def getSources(self):
         """Complete list of available ChiggerSourceBase objects"""
         return [source for viewport in self.getViewports() for source in viewport.sources() if source.getParam('pickable')]

@@ -1,4 +1,3 @@
-#pylint: disable=missing-docstring
 #* This file is part of the MOOSE framework
 #* https://www.mooseframework.org
 #*
@@ -13,27 +12,30 @@ from moosetools import mooseutils
 from .ExodusReader import ExodusReader
 from .. import base
 
-class MultiAppExodusReader(base.ChiggerObject):
+class MultiExodusReader(base.ChiggerObject):
     """
-    A reader for MultiApp Exodus files.
+    A reader for handling multiple ExodusII files.
 
     This class is simply a wrapper that creates and ExodusReader object for each file found using
     glob from the supplied pattern.
-
-    Inputs:
-        pattern[str]: A string containing a glob pattern for MultiApp ExodusII output files from
-                      MOOSE.
     """
+
+    # Used by utils.get_current_exodus_multi_reader for automatically adding reader objects to the
+    # current ExodusSource.
+    __CHIGGER_CURRENT__ = None
 
     @staticmethod
     def validParams():
         opt = ExodusReader.validParams()
+        opt.remove('filename')
+        opt.add('pattern', vtype=str, doc="The filename pattern to use for loading multiple ExodusII files.")
         return opt
 
-    def __init__(self, pattern, **kwargs):
-        super(MultiAppExodusReader, self).__init__(**kwargs)
+    def __init__(self, **kwargs):
+        MultiExodusReader.__CHIGGER_CURRENT__ = self
+        base.ChiggerObject.__init__(self, **kwargs)
 
-        self.__readers = []
+        self.__readers = list()
         for filename in glob.glob(pattern):
             self.__readers.append(ExodusReader(filename, **kwargs))
 

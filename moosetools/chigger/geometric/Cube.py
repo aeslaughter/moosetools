@@ -21,7 +21,7 @@ class Cube(GeometricSource):
     @staticmethod
     def validParams():
         opt = GeometricSource.validParams()
-        opt.add('color', vtype=utils.AutoColor, doc="The color of the cube")
+        opt.add('color', vtype=(utils.Color, utils.AutoColor), doc="The color of the cube")
         opt.add('xmin', default=0, vtype=(int, float),
                 doc="Minimum x-value in 3D renderer coordinates.")
         opt.add('xmax', default=1, vtype=(int, float),

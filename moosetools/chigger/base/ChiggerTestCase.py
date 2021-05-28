@@ -16,9 +16,13 @@ class ChiggerTestCase(unittest.TestCase):
         self._window = chigger.Window(size=self.SIZE)
         self._viewport = chigger.Viewport()
         self._test = chigger.observers.TestObserver()
+        self._start = True
 
     def pressKey(self, *args, **kwargs):
         self._test.pressKey(*args, **kwargs)
+
+    def disableWindowStart(self):
+        self._start = False
 
     def setObjectParams(self, obj, *args, **kwargs):
         self._test.setObjectParams(obj, *args, **kwargs)
@@ -41,5 +45,7 @@ class ChiggerTestCase(unittest.TestCase):
     def _callTestMethod(self, method):
         """Only exists in python 3.8 or greater."""
         unittest.TestCase._callTestMethod(self, method)
-        self._window.start()
-        self.assertFalse(self._test.status())
+        if self._start:
+            self._window.start()
+            self.assertFalse(self._test.status())
+        self._start = True

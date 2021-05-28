@@ -44,7 +44,7 @@ def auto_adjust_color(parent, children):
     see Window.py Viewport.py
     """
     def update_color_param(param, c):
-        if (param.vtype is not None) and (AutoColor in param.vtype):# and (param.value is None):
+        if (param.vtype is not None) and (AutoColor in param.vtype) and (param.value is None):
             param.setValue(c)
         elif param.value.__class__.__name__ == 'ChiggerInputParameters': # use name to avoid circular import
             for sub_param in param.value.parameters():
