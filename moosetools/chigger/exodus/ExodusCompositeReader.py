@@ -7,7 +7,6 @@ from .ExodusReader import ExodusReader
 from .. import base
 
 class ExodusCompositeReader(base.ChiggerAlgorithm, VTKPythonAlgorithmBase):
-
     """
     A reader for handling multiple ExodusII files.
 
@@ -23,15 +22,15 @@ class ExodusCompositeReader(base.ChiggerAlgorithm, VTKPythonAlgorithmBase):
         return opt
 
     def __init__(self, **kwargs):
-        ExodusReader.__CHIGGER_CURRENT__ = self
         base.ChiggerAlgorithm.__init__(self, **kwargs)
-        VTKPythonAlgorithmBase.__init__(self, nInputPorts=0,
+        VTKPythonAlgorithmBase.__init__(self,
                                         inputType='vtkMultiBlockDataSet',
                                         outputType='vtkMultiBlockDataSet')
 
         self.__readers = list()
         filenames = sorted(glob.glob(self.getParam('pattern')))
         self.SetNumberOfInputPorts(len(filenames))
+        self.SetNumberOfOutputPorts(len(filenames))
 
         for index, filename in enumerate(filenames):
             params = ExodusReader.validParams()
@@ -40,25 +39,21 @@ class ExodusCompositeReader(base.ChiggerAlgorithm, VTKPythonAlgorithmBase):
             self.__readers.append(ExodusReader(**params.toDict()))
             self.SetInputConnection(index, self.__readers[-1].GetOutputPort(0))
 
+        ExodusReader.__CHIGGER_CURRENT__ = self
+
     def _onRequestData(self, inInfo, outInfo):
         """(override, protected)
         Do not call this method, call updateData.
         """
         base.ChiggerAlgorithm._onRequestData(self, inInfo, outInfo)
+        for i in range(len(inInfo)):
+            in_data = inInfo[i].GetInformationObject(0).Get(vtk.vtkDataObject.DATA_OBJECT())
+            out_data = outInfo[i].GetInformationObject(0).Get(vtk.vtkDataObject.DATA_OBJECT())
+            out_data.ShallowCopy(in_data)
 
-        blocks = vtk.vtkMultiBlockDataSet()
-        for index in range(len(inInfo)):
-            inp = inInfo[index].GetInformationObject(0).Get(vtk.vtkDataObject.DATA_OBJECT())
-            blocks.SetBlock(index, inp)
-        blocks.Update()
+    def getReaders(self):
+        return self.__readers
 
-        extract = vtk.vtkExtractBlock()
-        extract.AddIndex(0)
-        extract.SetInputData(blocks)
-        extract.Update()
-
-        out_data = outInfo.GetInformationObject(0).Get(vtk.vtkDataObject.DATA_OBJECT())
-        out_data.ShallowCopy(extract.GetOutputDataObject(0))
 
     def __iter__(self):
         """

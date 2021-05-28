@@ -4,7 +4,6 @@ from .ExodusCompositeReader import ExodusCompositeReader
 #from NemesisReader import NemesisReader
 #
 from .ExodusSource import ExodusSource
-from .ExodusCompositeSource import ExodusCompositeSource
 #from ExodusColorBar import ExodusColorBar
 #
 #from ExodusResult import ExodusResult
