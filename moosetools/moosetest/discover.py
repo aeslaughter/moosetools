@@ -41,7 +41,7 @@ class MooseTestFactory(factory.Factory):
         params.add('object_defaults',
                    vtype=dict,
                    doc=("Default object settings for `Runner` and `Differ` objects, where the key "
-                        "is the registered object name (e.g., `RunCommand`) and the value is a "
+                        "is the registered object name (e.g., `ExecuteCommand`) and the value is a "
                         "`dict` of parameter names and values."))
         return params
 

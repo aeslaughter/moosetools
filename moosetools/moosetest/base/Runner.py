@@ -293,7 +293,7 @@ class Runner(MooseTestObject):
         parameter.
 
         Refer to `moosetools.core.TestCase` for how this function is called and
-        `moosetools.moosetest.runners.RunCommand` for an example implementation.
+        `moosetools.moosetest.runners.ExecuteCommand` for an example implementation.
         """
         raise NotImplementedError("The 'execute' method must be overridden.")
 

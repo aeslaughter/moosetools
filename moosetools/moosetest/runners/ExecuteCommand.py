@@ -15,7 +15,7 @@ import subprocess
 from moosetools.moosetest.base import Runner
 
 
-class RunCommand(Runner):
+class ExecuteCommand(Runner):
     @staticmethod
     def validParams():
         params = Runner.validParams()

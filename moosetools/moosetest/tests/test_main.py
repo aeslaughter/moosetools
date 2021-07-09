@@ -228,10 +228,10 @@ class Test_get_object_defaults(unittest.TestCase):
     def test(self):
         root = pyhit.Node()
         obj_defaults = root.append('Defaults')
-        obj_defaults.append('RunCommand', timeout='0.1')
+        obj_defaults.append('ExecuteCommand', timeout='0.1')
 
         out = _get_object_defaults(None, root)
-        self.assertEqual(out, {'RunCommand': {'timeout': '0.1'}})
+        self.assertEqual(out, {'ExecuteCommand': {'timeout': '0.1'}})
 
     def testNone(self):
         root = pyhit.Node()
